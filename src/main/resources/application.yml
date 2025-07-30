@@ -1,5 +1,5 @@
 server:
-  port: 8089
+  port: 12050
   servlet:
     context-path: /
 
@@ -9,12 +9,20 @@ spring:
     port: 6379
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/springboot-mysql?userSSL=false;serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://localhost:3306/yeardesign?userSSL=false;serverTimezone=Asia/Shanghai
     username: root
     password: 1234
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 
 mybatis-plus:
   type-aliases-package: cn.smxy.yeardesign.domain
   config-locations: classpath:mapper/*.xml
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+# 日志配置
+logging:
+  level:
+    cn.smxy.yeardesign: debug
