@@ -4,6 +4,6 @@ import cn.smxy.forum.domain.param.other.LoginBodyDTO;
 
 public interface ILoginService {
 
-    String login(LoginBodyDTO loginBodyDTO);
+    String login(String userName, String password);
 
 }

@@ -23,10 +23,10 @@ public class LoginServiceImpl implements ILoginService {
     private RedisUtil redisUtil;
 
     @Override
-    public String login(LoginBodyDTO loginBodyDTO) {
+    public String login(String userName, String password) {
         // AuthenticationManager.authenticate()进行用户认证
         // 需要一个参数:Authentication的实现类，所以需要把user转换成Authentication的实现类
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(loginBodyDTO.getUserName(), loginBodyDTO.getPassword());
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userName,password);
         Authentication authenticate = authenticationManager.authenticate(token);
         // 如果认证没通过就给出对应的提示
         if (Objects.isNull(authenticate)) {

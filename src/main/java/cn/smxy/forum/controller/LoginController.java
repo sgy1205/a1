@@ -22,7 +22,7 @@ public class LoginController {
     @ApiOperation("登录")
     public AjaxResult login(LoginBodyDTO loginBodyDTO) {
         AjaxResult ajaxResult = AjaxResult.success("登录成功");
-        String token = loginService.login(loginBodyDTO);
+        String token = loginService.login(loginBodyDTO.getUserName(), loginBodyDTO.getPassword());
         ajaxResult.put("token", token);
         return ajaxResult;
     }
