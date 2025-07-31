@@ -16,7 +16,7 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.OAS_30) // 关键：OAS_30
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("cn.smxy.yeardesign.controller"))
+                .apis(RequestHandlerSelectors.basePackage("cn.smxy.forum.controller"))
                 .build();
     }
 

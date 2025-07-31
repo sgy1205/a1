@@ -1,6 +1,8 @@
 package cn.smxy.forum.config;
 
 import cn.smxy.forum.filter.JWTFilter;
+import cn.smxy.forum.service.Impl.AccessDeniedHandlerImpl;
+import cn.smxy.forum.service.Impl.AuthenticationEntryPointImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +23,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private JWTFilter jwtFilter;
+    @Autowired
+    private AuthenticationEntryPointImpl authenticationEntryPoint;
+    @Autowired
+    private AccessDeniedHandlerImpl accessDeniedHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -35,6 +41,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 //不通过Session获取SecurityContext
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .exceptionHandling()
+                .authenticationEntryPoint(authenticationEntryPoint)
+                .accessDeniedHandler(accessDeniedHandler)
                 .and()
                 .authorizeRequests()
                 // 对于登录接口 允许匿名访问

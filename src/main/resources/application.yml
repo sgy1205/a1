@@ -18,7 +18,7 @@ spring:
       matching-strategy: ant_path_matcher
 
 mybatis-plus:
-  type-aliases-package: cn.smxy.yeardesign.domain
+  type-aliases-package: cn.smxy.forum.domain
   config-locations: classpath:mapper/*.xml
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
@@ -26,4 +26,4 @@ mybatis-plus:
 # 日志配置
 logging:
   level:
-    cn.smxy.yeardesign: debug
+    cn.smxy.forum: debug
