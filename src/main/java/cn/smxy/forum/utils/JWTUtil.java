@@ -7,11 +7,11 @@ import com.auth0.jwt.algorithms.Algorithm;
 import java.util.Calendar;
 
 public class JWTUtil {
-    // 加密的秘钥封装一下
+    /**加密的秘钥封装一下*/
     private static final String SECRET = "shigy";
-    // id字段
+    /**userId字段*/
     private static final String ID_FIELD = "userId";
-    // token的有效时间 30 天
+    /**token的有效时间 30 天*/
     private static final Integer TIME_OUT_DAY = 30;
 
     /**
