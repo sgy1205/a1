@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>cn.smxy</groupId>
-	<artifactId>YearDesign</artifactId>
+	<artifactId>forum</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>YearDesign</name>
 	<description>YearDesign</description>
