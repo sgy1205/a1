@@ -27,4 +27,12 @@
             t1.status = 0
     </select>
 
+    <select id="getNumberOfRoleMenu" resultType="integer">
+        SELECT
+            COUNT(DISTINCT role_id) AS role_count
+        FROM
+            role_menu
+        WHERE
+            menu_id =#{menuId};
+    </select>
 </mapper>

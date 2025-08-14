@@ -41,4 +41,9 @@ public class Constants {
      */
     public static final String FAIL = "1";
 
+    /**
+     * 默认用户名常量
+     */
+    public static final String DEFAULT_USER = "system"; // 可根据实际情况调整
+
 }

@@ -10,4 +10,11 @@ public interface IMenuService extends IService<Menu> {
 
     List<String> queryPermissionByUserId(Long userId);
 
+    /**
+     * 获取菜单绑定的角色数量
+     * @param menuId
+     * @return
+     */
+    Integer getNumberOfRoleMenu(Long menuId);
+
 }

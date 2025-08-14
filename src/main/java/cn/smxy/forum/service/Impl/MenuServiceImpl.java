@@ -20,4 +20,9 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
     public List<String> queryPermissionByUserId(Long userId) {
         return menuMapper.queryPermissionByUserId(userId);
     }
+
+    @Override
+    public Integer getNumberOfRoleMenu(Long menuId) {
+        return menuMapper.getNumberOfRoleMenu(menuId);
+    }
 }

@@ -65,6 +65,8 @@ public class LoginUser implements UserDetails {
         return user.getUserName();
     }
 
+    public Long getUserId(){return user.getUserId();};
+
     /**
      *     布尔值记得改为True，否则可能无法访问
       */

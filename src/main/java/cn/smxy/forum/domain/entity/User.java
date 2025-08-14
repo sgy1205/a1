@@ -1,5 +1,6 @@
 package cn.smxy.forum.domain.entity;
 
+import cn.smxy.forum.domain.other.BaseEntity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.AllArgsConstructor;
@@ -11,7 +12,7 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class User extends BaseEntity {
 
   @TableId(type = IdType.AUTO)
   private Long userId;
@@ -29,8 +30,4 @@ public class User {
   private Long registerRank;
   private String signature;
   private String delFlag;
-  private String createBy;
-  private Date createTime;
-  private String updateBy;
-  private Date updateTime;
 }

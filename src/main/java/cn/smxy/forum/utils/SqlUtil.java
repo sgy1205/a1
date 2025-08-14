@@ -1,7 +1,4 @@
 package cn.smxy.forum.utils;
-
-import com.sun.xml.internal.ws.util.UtilException;
-
 /**
  * sql操作工具类
  *
@@ -31,11 +28,11 @@ public class SqlUtil
     {
         if (StringUtils.isNotEmpty(value) && !isValidOrderBySql(value))
         {
-            throw new UtilException("参数不符合规范，不能进行查询");
+            throw new IllegalArgumentException("参数不符合规范，不能进行查询");
         }
         if (StringUtils.length(value) > ORDER_BY_MAX_LENGTH)
         {
-            throw new UtilException("参数已超过最大限制，不能进行查询");
+            throw new IllegalArgumentException("参数已超过最大限制，不能进行查询");
         }
         return value;
     }
@@ -62,7 +59,7 @@ public class SqlUtil
         {
             if (StringUtils.indexOfIgnoreCase(value, sqlKeyword) > -1)
             {
-                throw new UtilException("参数存在SQL注入风险");
+                throw new IllegalArgumentException("参数存在SQL注入风险");
             }
         }
     }
