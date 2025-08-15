@@ -1,5 +1,6 @@
 package cn.smxy.forum.domain.param.update;
 
+import cn.smxy.forum.domain.other.BaseEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @ApiModel("修改权限菜单")
-public class UpdateMenuDTO {
+public class UpdateMenuDTO extends BaseEntity {
     @ApiModelProperty("菜单ID")
     private Long menuId;
     @ApiModelProperty("菜单名称")

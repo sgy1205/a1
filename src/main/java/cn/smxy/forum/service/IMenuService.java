@@ -1,6 +1,7 @@
 package cn.smxy.forum.service;
 
 import cn.smxy.forum.domain.entity.Menu;
+import cn.smxy.forum.domain.other.TreeSelect;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.apache.ibatis.annotations.Param;
 
@@ -16,5 +17,10 @@ public interface IMenuService extends IService<Menu> {
      * @return
      */
     Integer getNumberOfRoleMenu(Long menuId);
+
+    /**
+     * 把平铺的菜单列表转成前端所需的树形 TreeSelect
+     */
+    public List<TreeSelect> buildTreeSelect(List<Menu> menus);
 
 }

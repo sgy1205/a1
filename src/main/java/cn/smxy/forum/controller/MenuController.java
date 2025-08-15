@@ -2,6 +2,7 @@ package cn.smxy.forum.controller;
 
 import cn.smxy.forum.domain.entity.Menu;
 import cn.smxy.forum.domain.other.TableDataInfo;
+import cn.smxy.forum.domain.other.TreeSelect;
 import cn.smxy.forum.domain.param.insert.AddMenuDTO;
 import cn.smxy.forum.domain.param.other.PageQuery;
 import cn.smxy.forum.domain.param.update.UpdateMenuDTO;
@@ -15,6 +16,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,13 +25,14 @@ import java.util.List;
 @RestController
 @RequestMapping("/menu")
 @Api(tags = "权限菜单模块")
-public class MenuController {
+public class MenuController extends BaseController{
 
     @Autowired
     private IMenuService menuService;
 
     @GetMapping("/directory")
     @ApiOperation("获取权限菜单目录列表")
+//    @PreAuthorize("@myExpressionUtil.myAuthority('menu:directory')")
     public R<List<MenuDirectoryVo>> getMenuPageList() {
         LambdaQueryWrapper<Menu> lqw=new LambdaQueryWrapper<>();
         lqw.eq(Menu::getMenuType,"0");
@@ -38,14 +41,11 @@ public class MenuController {
         return R.ok(MenuMapping.INSTANCE.toMenuDirectoryVoList(menuList));
     }
 
-    @GetMapping("/menuList/{menuId}")
-    @ApiOperation("获取子菜单列表")
-    public R<List<SunMenuListVo>> getSunMenuList(@PathVariable("menuId") Long menuId){
-        LambdaQueryWrapper<Menu> lqw=new LambdaQueryWrapper<>();
-        lqw.eq(Menu::getParentId,menuId);
-        List<Menu> menuList=menuService.list(lqw);
-
-        return R.ok(MenuMapping.INSTANCE.toSunMenuVoList(menuList));
+    @GetMapping("/menuList")
+    @ApiOperation("获取树形菜单列表")
+    public R<List<TreeSelect>> getSunMenuList(){
+        List<TreeSelect> treeSelects = menuService.buildTreeSelect(menuService.list());
+        return R.ok(treeSelects);
     }
 
     @PostMapping()
@@ -58,7 +58,7 @@ public class MenuController {
         }else{
             Menu menu=new Menu();
             BeanUtils.copyBeanProp(menu,addMenuDTO);
-            return menuService.save(menu)?R.ok():R.fail();
+            return R.to(menuService.save(menu),"添加");
         }
     }
 
@@ -75,12 +75,13 @@ public class MenuController {
     public R updateMenu(@Validated @RequestBody UpdateMenuDTO updateMenuDTO){
         LambdaQueryWrapper<Menu> lqw=new LambdaQueryWrapper<>();
         lqw.eq(Menu::getMenuName,updateMenuDTO.getMenuName());
+        lqw.ne(Menu::getMenuId,updateMenuDTO.getMenuId());
         if(menuService.count(lqw)>0){
             return R.fail("该菜单名称已存在");
         }else{
             Menu menu=new Menu();
             BeanUtils.copyBeanProp(menu,updateMenuDTO);
-            return menuService.updateById(menu)?R.ok():R.fail();
+            return R.to(menuService.updateById(menu),"修改");
         }
     }
 
@@ -95,7 +96,7 @@ public class MenuController {
         if(menuService.getNumberOfRoleMenu(menuId)>0){
             return R.fail("该菜单已绑定角色，不允许删除");
         }
-        return menuService.removeById(menuId)?R.ok():R.fail();
+        return R.to(menuService.removeById(menuId),"删除");
     }
 
 }

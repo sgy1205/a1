@@ -1,5 +1,6 @@
 package cn.smxy.forum.domain.param.insert;
 
+import cn.smxy.forum.domain.other.BaseEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AddMenuDTO {
+public class AddMenuDTO extends BaseEntity {
     @ApiModelProperty("菜单名称")
     private String menuName;
     @ApiModelProperty("父菜单ID 0-目录")

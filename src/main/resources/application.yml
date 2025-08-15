@@ -10,9 +10,9 @@ spring:
     database: 1
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/yeardesign?userSSL=false;serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://localhost:3306/forum?userSSL=false;serverTimezone=Asia/Shanghai
     username: root
-    password: 1234
+    password: 12345
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
@@ -22,11 +22,6 @@ mybatis-plus:
   config-locations: classpath:mapper/*.xml
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-  global-config:
-    db-config:
-      logic-delete-field: delFlag  # 实体类字段名（驼峰命名）
-      logic-not-delete-value: 0     # 未删除的值
-      logic-delete-value: 2         # 已删除的值
 
 # 日志配置
 logging:
