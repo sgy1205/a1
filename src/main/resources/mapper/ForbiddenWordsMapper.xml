@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.smxy.forum.mapper.ForbiddenWordsMapper">
+
+    <!--	分页查询违禁词列表信息	-->
+    <select id="selectForbiddenWordList" resultType="ForbiddenWordsPageListVo">
+        SELECT
+        forbidden_words_id,
+        type,
+        forbidden_word AS forbiddenWord,
+        remark,
+        create_time
+        FROM
+        ms_forbidden_words
+        WHERE
+        del_flag = 0
+        AND	status = 0
+        <if test="type != null"> AND type = #{type} </if>
+        <if test="forbiddenWord != null and forbiddenWord != ''"> AND forbidden_word like concat('%',#{forbiddenWord},'%')</if>
+        ORDER BY update_time DESC ,create_time DESC
+    </select>
+
+</mapper>

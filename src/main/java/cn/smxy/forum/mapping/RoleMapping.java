@@ -1,7 +1,7 @@
 package cn.smxy.forum.mapping;
 
 import cn.smxy.forum.domain.entity.Role;
-import cn.smxy.forum.domain.vo.RoleNameListVo;
+import cn.smxy.forum.domain.other.RoleNameList;
 import cn.smxy.forum.domain.vo.RolePageListVo;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -17,7 +17,7 @@ public interface RoleMapping {
 
     List<RolePageListVo> toPageListVoList(List<Role> roles);
 
-    RoleNameListVo toRoleNameListVo(Role role);
+    RoleNameList toRoleNameListVo(Role role);
 
-    List<RoleNameListVo> toRoleNameListVoList(List<Role> roles);
+    List<RoleNameList> toRoleNameListVoList(List<Role> roles);
 }

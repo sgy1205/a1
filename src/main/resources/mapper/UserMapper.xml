@@ -2,4 +2,105 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.smxy.forum.mapper.UserMapper">
 
+    <select id="getUserPageList" resultType="userManagerPageListVo">
+        SELECT
+        user.user_id,
+        user.nick_name,
+        user.user_type,
+        user.email,
+        user.avatar,
+        user.points,
+        user.silence_status,
+        user.create_time,
+        user.user_name
+        FROM
+        user
+        where
+        del_flag = 0
+        <if test="userId != null and userId != ''">
+            and user_id like concat('%',#{userId},'%')
+        </if>
+        <if test="userName != null and userName != ''">
+            and user_name like concat('%',#{userName},'%')
+        </if>
+        <if test="nickName != null and nickName != ''">
+            and nick_name like concat('%',#{nickName},'%')
+        </if>
+        <if test="userType != null and userType != ''">
+            and user_type like concat('%',#{userType},'%')
+        </if>
+        ORDER BY create_time DESC
+    </select>
+
+    <resultMap id="UserDetailById" type="userManagerDetail">
+        <id property="userId" column="user_id"></id>
+        <result property="userType" column="user_type"></result>
+        <result property="avatar" column="avatar"></result>
+        <result property="userName" column="user_name"></result>
+        <result property="nickName" column="nick_name"></result>
+        <result property="email" column="email"></result>
+        <result property="sex" column="sex"></result>
+        <result property="signature" column="signature"></result>
+        <collection property="roleIds" ofType="long">
+            <result column="role_id"></result>
+        </collection>
+    </resultMap>
+    <select id="getUserDetailById" resultMap="UserDetailById">
+        SELECT
+            t1.user_id,
+            t1.user_type,
+            t1.avatar,
+            t1.user_name,
+            t1.nick_name,
+            t1.email,
+            t1.sex,
+            t1.signature,
+            t2.role_id
+        FROM
+            user AS t1
+                LEFT JOIN
+            user_role AS t2
+            ON
+                t1.user_id = t2.user_id
+                left join
+            role t3
+            ON
+                t2.role_id = t3.role_id
+        where
+            t1.user_id=#{userId}
+    </select>
+
+    <update id="updateUser">
+        update user
+        set
+            user_type = #{updateUserParam.userType},
+            avatar = #{updateUserParam.avatar},
+            user_name = #{updateUserParam.userName},
+            nick_name = #{updateUserParam.nickName},
+            email = #{updateUserParam.email},
+            sex = #{updateUserParam.sex},
+            homepage_url = #{updateUserParam.homepageUrl},
+            signature = #{updateUserParam.signature},
+            update_time = now(),
+            update_by = #{updateBy}
+        where
+            user_id = #{updateUserParam.userId}
+    </update>
+
+    <delete id="deleteUserRole">
+        delete from user_role where user_id = #{userId}
+    </delete>
+
+    <insert id="addUserRoles">
+        INSERT INTO user_role (user_id, role_id) VALUES
+        <foreach collection="roleIds" item="roleId" separator=",">
+            (#{userId}, #{roleId})
+        </foreach>
+    </insert>
+
+    <select id="getUserNameForLogin" resultType="string">
+        select user_name from user where user_name = #{loginStr} OR email = #{loginStr}
+            AND del_flag = 0
+    </select>
+
 </mapper>

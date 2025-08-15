@@ -7,7 +7,6 @@ import cn.smxy.forum.domain.param.other.PageQuery;
 import cn.smxy.forum.domain.param.query.RolePageListDTO;
 import cn.smxy.forum.domain.param.update.UpdateRoleDTO;
 import cn.smxy.forum.domain.vo.RoleDetailVo;
-import cn.smxy.forum.domain.vo.RoleNameListVo;
 import cn.smxy.forum.domain.vo.RolePageListVo;
 import cn.smxy.forum.mapping.RoleMapping;
 import cn.smxy.forum.service.IRoleService;
@@ -16,7 +15,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -46,14 +44,6 @@ public class RoleController extends BaseController {
         List<RolePageListVo> pageListVoList = RoleMapping.INSTANCE.toPageListVoList(roleList.getRecords());
 
         return getDataTable(pageListVoList);
-    }
-
-    @GetMapping("/nemaList")
-    @ApiOperation("角色名称列表")
-    public R<List<RoleNameListVo>> getRoleNameList(){
-        List<RoleNameListVo> roleNameListVoList = RoleMapping.INSTANCE.toRoleNameListVoList(roleService.list());
-
-        return R.ok(roleNameListVoList);
     }
 
     @PostMapping()

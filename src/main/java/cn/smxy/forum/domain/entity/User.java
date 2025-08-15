@@ -29,5 +29,6 @@ public class User extends BaseEntity {
   private Long points;
   private Long registerRank;
   private String signature;
+  private String silenceStatus;
   private String delFlag;
 }
