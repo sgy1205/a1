@@ -17,7 +17,7 @@ import java.text.SimpleDateFormat;
 @RestController
 @RequestMapping("/silence")
 @Api(tags = "用户禁言模块")
-public class MsSilenceController extends BaseController {
+public class SilenceController extends BaseController {
 
     @Autowired
     private ISilenceService silenceService;

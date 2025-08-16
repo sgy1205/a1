@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.smxy.forum.mapper.PostMapper">
+
+    <resultMap id="getPostManagerPageList" type="PostManagerPageListVo">
+        <id property="postId" column="post_id"></id>
+        <result property="title" column="title"></result>
+        <result property="content" column="content"></result>
+        <result property="createTime" column="create_time"></result>
+        <result property="browseNumber" column="browse_number"></result>
+        <result property="likeNumber" column="like_number"></result>
+        <result property="collectionNumber" column="collection_number"></result>
+        <result property="delFlag" column="del_flag"></result>
+        <result property="recommend" column="recommend"></result>
+        <result property="userId" column="user_id"></result>
+        <result property="nickName" column="nick_name"></result>
+        <result property="avatar" column="avatar"></result>
+        <result property="remark" column="remark"></result>
+        <result property="auditStatus" column="audit_status"></result>
+        <result property="node" column="node"></result>
+    </resultMap>
+    <select id="getPostManagerPageListVo" resultMap="getPostManagerPageList">
+        SELECT
+        t1.post_id,
+        t1.title,
+        t1.content,
+        t1.create_time,
+        t1.update_time,
+        t1.browse_number,
+        t1.like_number,
+        (select count(*) from ms_collection t2 where t1.post_id=t2.post_id and t2.del_flag = 0 and t2.type = 1)
+        as collection_number,
+        t1.del_flag,
+        t1.recommend,
+        t2.user_id,
+        t2.nick_name,
+        t2.avatar,
+        t4.remark,
+        t4.audit_status,
+        t1.node
+        FROM
+        post t1
+        JOIN
+        user t2 ON t1.user_id = t2.user_id
+        LEFT JOIN
+        tags_post tp ON t1.post_id = tp.post_id AND tp.post_type = 1
+        Left Join
+        post_audit t4 ON t1.post_id = t4.post_id
+        <where>
+            <if test="postId != null and postId != ''">
+                AND t1.post_id = #{postId}
+            </if>
+            <if test="userId != null and userId != ''">
+                AND t1.user_id = #{userId}
+            </if>
+            <if test="delFlag != null and delFlag != ''">
+                AND t1.del_flag = #{delFlag}
+            </if>
+            <if test="recommend != null and recommend != ''">
+                AND t1.recommend = #{recommend}
+            </if>
+            <if test="auditStatus !=null and auditStatus != ''">
+                and t4.audit_status = #{auditStatus}
+            </if>
+            <if test="title != null and title != ''">
+                AND t1.title LIKE CONCAT('%', #{title}, '%')
+            </if>
+        </where>
+        GROUP BY
+        t1.post_id, t1.title, t1.content, t1.create_time,
+        t1.browse_number, t1.like_number, t1.comment_number,
+        t2.user_id, t2.nick_name
+        ORDER BY
+        t1.update_time DESC,t1.create_time DESC
+    </select>
+
+</mapper>
