@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.smxy.forum.mapper.SilenceMapper">
+
+    <update id="updateUserSilenceStatus">
+        UPDATE
+            user t1
+            INNER JOIN
+            (SELECT
+            user_id, MAX(signature_time) as latest_time
+            FROM
+            silence
+            WHERE
+            del_flag = 0
+            GROUP BY
+            user_id)  t2 ON t1.user_id = t2.user_id
+            INNER JOIN silence t3 ON t3.user_id = t2.user_id AND t3.signature_time = t2.latest_time
+            SET
+                t1.silence_status = 0
+        WHERE t2.latest_time &lt; NOW()
+          AND t1.silence_status = 1
+    </update>
+
+    <update id="updateUserSilenceStatusById">
+        UPDATE
+            user t1
+            INNER JOIN
+            (SELECT
+            user_id, MAX(signature_time) as latest_time
+            FROM
+            silence
+            WHERE
+            del_flag = 0
+            GROUP BY
+            user_id)  t2 ON t1.user_id = t2.user_id
+            INNER JOIN silence t3 ON t3.user_id = t2.user_id AND t3.signature_time = t2.latest_time
+            SET
+                t1.silence_status = 0
+        WHERE t2.latest_time &lt; NOW()
+          AND t1.silence_status = 1
+          AND t1.user_id=#{userId}
+    </update>
+
+
+    <select id="getSilenceRecord" resultType="Silence">
+        SELECT
+            silence_id,
+            type,
+            user_id,
+            signature_time,
+            create_time,
+            del_flag,
+            signature_reason
+        FROM
+            silence
+        WHERE
+            user_id = #{userId}
+          AND del_flag = 0
+        ORDER BY
+            signature_time DESC
+            LIMIT 1;
+    </select>
+
+    <select id="getSilenceCancelUserIdList" resultType="long">
+        SELECT
+            t1.user_id
+        FROM
+            user t1
+                INNER JOIN
+            (SELECT
+                 user_id, MAX(signature_time) as latest_time
+             FROM
+                 silence
+             WHERE
+                 del_flag = 0
+             GROUP BY
+                 user_id)  t2 ON t1.user_id = t2.user_id
+                INNER JOIN silence t3 ON t3.user_id = t2.user_id AND t3.signature_time = t2.latest_time
+        WHERE t2.latest_time &lt; NOW()
+          AND t1.silence_status = 1
+    </select>
+
+</mapper>

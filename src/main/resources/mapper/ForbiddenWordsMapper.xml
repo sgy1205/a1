@@ -11,7 +11,7 @@
         remark,
         create_time
         FROM
-        ms_forbidden_words
+        forbidden_words
         WHERE
         del_flag = 0
         AND	status = 0

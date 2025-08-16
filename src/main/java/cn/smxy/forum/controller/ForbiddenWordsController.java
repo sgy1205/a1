@@ -3,12 +3,14 @@ package cn.smxy.forum.controller;
 import cn.smxy.forum.domain.entity.ForbiddenWords;
 import cn.smxy.forum.domain.other.TableDataInfo;
 import cn.smxy.forum.domain.param.insert.AddForbiddenWordDTO;
+import cn.smxy.forum.domain.param.other.PageQuery;
 import cn.smxy.forum.domain.param.query.ForbiddenWordsPageListDTO;
 import cn.smxy.forum.domain.param.update.UpdateForbiddenWordsDTO;
 import cn.smxy.forum.domain.vo.ForbiddenWordsDetailVo;
 import cn.smxy.forum.domain.vo.ForbiddenWordsPageListVo;
 import cn.smxy.forum.mapping.ForbiddenWordsMapping;
 import cn.smxy.forum.service.IForbiddenWordsService;
+import cn.smxy.forum.utils.PageUtils;
 import cn.smxy.forum.utils.R;
 import cn.smxy.forum.utils.RedisUtil;
 import io.swagger.annotations.Api;
@@ -62,8 +64,7 @@ public class ForbiddenWordsController extends BaseController {
 
     @ApiOperation("分页查询违禁词列表信息")
     @GetMapping("/list")
-    public TableDataInfo<ForbiddenWordsPageListVo> list(@Validated ForbiddenWordsPageListDTO forbiddenWordsPageListDTO) {
-
+    public TableDataInfo<ForbiddenWordsPageListVo> list(@Validated PageQuery pageQuery, @Validated ForbiddenWordsPageListDTO forbiddenWordsPageListDTO) {
         startPage();
         List<ForbiddenWordsPageListVo> forbiddenWords = forbiddenWordsService.selectForbiddenWordList(forbiddenWordsPageListDTO);
 

@@ -7,17 +7,19 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ForbiddenWords extends BaseEntity {
+public class Silence extends BaseEntity {
 
   @TableId(type = IdType.AUTO)
-  private Long forbiddenWordsId;
-  private Long type;
-  private String forbiddenWord;
-  private String remark;
-  private String status;
+  private Long silenceId;
+  private String type;
+  private Long userId;
+  private Date signatureTime;
+  private String signatureReason;
   private String delFlag;
 
 }
