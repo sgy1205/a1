@@ -24,8 +24,6 @@ public class Post extends BaseEntity {
   private Long commentNumber;
   private Long collectNumber;
   private Long browseNumber;
-  private String imageUrl;
-  private String fileUrl;
   private String delFlag;
 
 }
