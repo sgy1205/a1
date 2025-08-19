@@ -73,4 +73,13 @@ public interface IUserService extends IService<User> {
      */
     boolean checkEmail(Long userId, String email);
 
+    /**
+     * 修改密码
+     * @param userId
+     * @param oldpassword
+     * @param newPassword
+     * @return
+     */
+    boolean updatePassword(Long userId,String oldpassword, String newPassword);
+
 }

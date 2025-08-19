@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @ApiModel("登录参数")
 public class LoginBodyDTO {
     @ApiModelProperty("账号")
-    private String userName;
+    private String loginStr;
     @ApiModelProperty("密码")
     private String password;
 }

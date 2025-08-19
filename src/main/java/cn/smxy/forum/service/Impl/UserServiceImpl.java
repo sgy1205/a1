@@ -10,6 +10,11 @@ import cn.smxy.forum.service.IUserService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,6 +24,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
 
     @Override
@@ -71,5 +78,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         lqw.ne(User::getUserId, userId);
         lqw.eq(User::getDelFlag,0);
         return userMapper.selectCount(lqw) > 0;
+    }
+
+    @Override
+    public boolean updatePassword(Long userId, String oldpassword, String newPassword) {
+        User user = userMapper.selectById(userId);
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(user.getUserName(),oldpassword);
+        try {
+            Authentication authenticate = authenticationManager.authenticate(token);
+        }catch (BadCredentialsException e){
+            return false;
+        }
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        user.setPassword(encoder.encode(newPassword));
+        return userMapper.updateById(user)>0;
     }
 }
