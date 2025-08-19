@@ -9,12 +9,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@ApiModel("获取角色列表分页参数")
-public class RolePageListDTO {
-    @ApiModelProperty("角色名称")
-    private String roleName;
-    @ApiModelProperty("角色状态")
+@ApiModel("获取权限菜单列表参数")
+public class MenuListDTO {
+    @ApiModelProperty("菜单名称")
+    private String menuName;
+    @ApiModelProperty("菜单状态")
     private String status;
-    @ApiModelProperty("角色权限字符")
-    private String roleKey;
+    @ApiModelProperty("菜单类型")
+    private String menuType;
 }

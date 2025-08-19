@@ -37,6 +37,7 @@ public class RoleController extends BaseController {
         Page<Role> page = new Page<>(pageQuery.getPageNum(), pageQuery.getPageSize());
         LambdaQueryWrapper<Role> lqw=new LambdaQueryWrapper<>();
         lqw.like(rolePageListDTO.getRoleName()!=null,Role::getRoleName, rolePageListDTO.getRoleName());
+        lqw.like(rolePageListDTO.getRoleKey()!=null,Role::getRoleKey, rolePageListDTO.getRoleKey());
         lqw.eq(rolePageListDTO.getStatus()!=null,Role::getStatus, rolePageListDTO.getStatus());
 
         Page<Role> roleList=roleService.page(page,lqw);
@@ -114,25 +115,16 @@ public class RoleController extends BaseController {
         return R.to(roleService.updateById(role),"修改");
     }
 
-    @DeleteMapping("/{roleId}")
-    @ApiOperation("修改角色删除状态")
-    public R deleteRole(@PathVariable("roleId") Long roleId){
-        Role role = roleService.getById(roleId);
-        LambdaUpdateWrapper<Role> luw=new LambdaUpdateWrapper<>();
-        if(role.getDelFlag().equals("0")){
-            luw.eq(Role::getRoleId,roleId).set(Role::getDelFlag,"2");
-        }else{
-            LambdaQueryWrapper<Role> lqw=new LambdaQueryWrapper<>();
-            lqw.eq(Role::getRoleName,role.getRoleName());
-            lqw.eq(Role::getDelFlag,"0");
-            if(roleService.count(lqw)>0){
-                return R.fail("已存在相同角色名称，恢复失败");
-            }else{
-                luw.eq(Role::getRoleId,roleId).set(Role::getDelFlag,"0");
-            }
+    @DeleteMapping()
+    @ApiOperation("删除角色")
+    public R deleteRole(@RequestBody List<Long> roleIds){
+        if(!roleService.removeByIds(roleIds)){
+            return R.fail("删除操作出错");
         }
-
-        return R.to(roleService.update(luw),"操作");
+        for (int i = 0; i < roleIds.size(); i++) {
+            roleService.deleteUserRole(roleIds.get(i));
+        }
+        return R.ok("删除成功");
     }
 
 }

@@ -46,4 +46,10 @@ public interface RoleMapper extends BaseMapper<Role> {
      */
     List<Long> selectRoleMenuIds(@Param("roleId") Long roleId);
 
+    /**
+     * 删除与用户绑定的角色
+     * @param roleId
+     * @return
+     */
+    Integer deleteUserRole(@Param("roleId") Long roleId);
 }

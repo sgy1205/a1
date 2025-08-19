@@ -34,4 +34,8 @@
     <select id="selectRoleMenuIds" resultType="long">
         select menu_id from role_menu where role_id = #{roleId}
     </select>
+
+    <delete id="deleteUserRole">
+        DELETE FROM user_role where role_id = #{roleId}
+    </delete>
 </mapper>

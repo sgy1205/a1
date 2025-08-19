@@ -12,7 +12,7 @@ public class JWTUtil {
     /**userId字段*/
     private static final String ID_FIELD = "userId";
     /**token的有效时间 30 天*/
-    private static final Integer TIME_OUT_DAY = 1;
+    private static final Integer TIME_OUT_DAY = 15;
 
     /**
      * 创建token

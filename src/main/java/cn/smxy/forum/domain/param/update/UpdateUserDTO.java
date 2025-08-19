@@ -31,8 +31,6 @@ public class UpdateUserDTO {
     private String email;
     @ApiModelProperty("性别 0-男 1-女 2-未知")
     private String sex;
-    @ApiModelProperty("主页")
-    private String homepageUrl;
     @ApiModelProperty("签名（描述）")
     private String signature;
     @ApiModelProperty("角色ID")

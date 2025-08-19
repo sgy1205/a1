@@ -5,6 +5,7 @@ import cn.smxy.forum.domain.other.TableDataInfo;
 import cn.smxy.forum.domain.other.TreeSelect;
 import cn.smxy.forum.domain.param.insert.AddMenuDTO;
 import cn.smxy.forum.domain.param.other.PageQuery;
+import cn.smxy.forum.domain.param.query.MenuListDTO;
 import cn.smxy.forum.domain.param.update.UpdateMenuDTO;
 import cn.smxy.forum.domain.vo.MenuDirectoryVo;
 import cn.smxy.forum.domain.vo.SunMenuListVo;
@@ -33,9 +34,11 @@ public class MenuController extends BaseController{
     @GetMapping("/directory")
     @ApiOperation("获取权限菜单目录列表")
 //    @PreAuthorize("@myExpressionUtil.myAuthority('menu:directory')")
-    public R<List<MenuDirectoryVo>> getMenuPageList() {
+    public R<List<MenuDirectoryVo>> getMenuPageList(MenuListDTO menuListDTO) {
         LambdaQueryWrapper<Menu> lqw=new LambdaQueryWrapper<>();
-        lqw.eq(Menu::getMenuType,"0");
+        lqw.like(menuListDTO.getMenuName()!=null,Menu::getMenuName, menuListDTO.getMenuName());
+        lqw.eq(menuListDTO.getStatus()!=null,Menu::getStatus, menuListDTO.getStatus());
+        lqw.eq(menuListDTO.getMenuType()!=null,Menu::getMenuType, menuListDTO.getMenuType());
         List<Menu> menuList=menuService.list(lqw);
 
         return R.ok(MenuMapping.INSTANCE.toMenuDirectoryVoList(menuList));

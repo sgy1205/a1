@@ -29,7 +29,7 @@ public class PostManagerController extends BaseController {
     @Autowired
     private IPostAuditService postAuditService;
 
-    @GetMapping("/pagelist")
+    @GetMapping("/pageList")
     @ApiOperation("帖子分页查询")
     public TableDataInfo<List<PostManagerPageListVo>> postManagerPagelist(@Validated PageQuery pageQuery, PostManagerPageListDTO postManagerPageListDTO) {
         startPage();
@@ -48,6 +48,11 @@ public class PostManagerController extends BaseController {
             return R.fail("帖子未通过审核，无法推荐");
         }
 
+        if(post.getRecommend().equals("0")){
+            post.setRecommend("1");
+        }else {
+            post.setRecommend("0");
+        }
         return postService.updateById(post)? R.ok():R.fail("修改推荐状态失败");
     }
 

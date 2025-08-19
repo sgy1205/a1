@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
@@ -39,14 +40,11 @@ public class LoginUser implements UserDetails {
      */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // 把permissions中的权限封装成对应的SimpleGrantedAuthority对象
         if (authorities == null) {
-            authorities = new ArrayList<>();
-        }
-        // 循环将权限字符串封装成需要的集合
-        for (String p : permissions) {
-            SimpleGrantedAuthority authority = new SimpleGrantedAuthority(p);
-            authorities.add(authority);
+            authorities = permissions.stream()
+                    .filter(p -> p != null && !p.trim().isEmpty()) // 过滤 null 和空串
+                    .map(SimpleGrantedAuthority::new)
+                    .collect(Collectors.toList());
         }
         return authorities;
     }

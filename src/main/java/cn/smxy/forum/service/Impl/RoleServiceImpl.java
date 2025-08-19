@@ -50,4 +50,9 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
         roleDetailVo.setRoleKey(role.getRoleKey());
         return roleDetailVo;
     }
+
+    @Override
+    public Integer deleteUserRole(Long roleId) {
+        return roleMapper.deleteUserRole(roleId);
+    }
 }

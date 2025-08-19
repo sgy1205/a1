@@ -22,7 +22,7 @@ public class Post extends BaseEntity {
   private String content;
   private Long likeNumber;
   private Long commentNumber;
-  private Long collectNumber;
+  private Long collectionNumber;
   private Long browseNumber;
   private String delFlag;
 

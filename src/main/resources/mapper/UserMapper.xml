@@ -73,18 +73,17 @@
     <update id="updateUser">
         update user
         set
-            user_type = #{updateUserParam.userType},
-            avatar = #{updateUserParam.avatar},
-            user_name = #{updateUserParam.userName},
-            nick_name = #{updateUserParam.nickName},
-            email = #{updateUserParam.email},
-            sex = #{updateUserParam.sex},
-            homepage_url = #{updateUserParam.homepageUrl},
-            signature = #{updateUserParam.signature},
+            user_type = #{updateUserDTO.userType},
+            avatar = #{updateUserDTO.avatar},
+            user_name = #{updateUserDTO.userName},
+            nick_name = #{updateUserDTO.nickName},
+            email = #{updateUserDTO.email},
+            sex = #{updateUserDTO.sex},
+            signature = #{updateUserDTO.signature},
             update_time = now(),
             update_by = #{updateBy}
         where
-            user_id = #{updateUserParam.userId}
+            user_id = #{updateUserDTO.userId}
     </update>
 
     <delete id="deleteUserRole">

@@ -37,24 +37,40 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http// 将自己定义的过滤器加到UsernamePasswordAuthenticationFilter之前
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-                //关闭csrf
+        http
+                // 1. 启用CORS并放行OPTIONS请求
+                .cors().and()  // 启用CorsConfig配置
+                // 2. 关闭CSRF和Session
                 .csrf().disable()
-                //不通过Session获取SecurityContext
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
+                // 3. 异常处理
                 .exceptionHandling()
                 .authenticationEntryPoint(authenticationEntryPoint)
                 .accessDeniedHandler(accessDeniedHandler)
                 .and()
+                // 4. 权限规则
                 .authorizeRequests()
-                // 对于登录接口 允许匿名访问
-                .antMatchers("/login","/register").anonymous()
-                .antMatchers(HttpMethod.GET, "/", "/*.html", "/**/*.html", "/**/*.css", "/**/*.js", "/profile/**").permitAll()
-                .antMatchers("/swagger-ui.html", "/swagger-resources/**", "/webjars/**", "/*/api-docs", "/druid/**").permitAll()
-                // 除上面外的所有请求全部需要鉴权认证
-                .anyRequest().authenticated();
+                // 放行预检请求、登录、注册、静态资源等
+                .antMatchers(HttpMethod.OPTIONS).permitAll()  // 关键：放行OPTIONS
+                .antMatchers("/login", "/register").anonymous()
+                .antMatchers(
+                        HttpMethod.GET,
+                        "/", "/*.html", "/**/*.html", "/**/*.css", "/**/*.js", "/profile/**"
+                ).permitAll()
+                .antMatchers(
+                        "/swagger-ui.html",
+                        "/swagger-resources/**",
+                        "/webjars/**",
+                        "/*/api-docs",
+                        "/druid/**",
+                        "/upload/**"
+                ).permitAll()
+                // 其他请求需认证
+                .anyRequest().authenticated()
+                .and()
+                // 5. 添加JWT过滤器
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
 

@@ -19,6 +19,10 @@ public class MenuDirectoryVo {
     private String status;
     @ApiModelProperty("菜单图标")
     private String icon;
+    @ApiModelProperty("父菜单ID")
+    private Long parentId;
+    @ApiModelProperty("菜单类型")
+    private String menuType;
     @ApiModelProperty("备注")
     private String remark;
 }

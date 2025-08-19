@@ -1,10 +1,13 @@
 package cn.smxy.forum.domain.vo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -23,4 +26,7 @@ public class RolePageListVo {
     private String delFlag;
     @ApiModelProperty("备注")
     private String remark;
+    @ApiModelProperty("创建时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date createTime;
 }

@@ -47,4 +47,11 @@ public interface IRoleService extends IService<Role> {
      */
     RoleDetailVo getRoleDetail(Long roleId);
 
+    /**
+     * 删除与用户绑定的角色
+     * @param roleId
+     * @return
+     */
+    Integer deleteUserRole(Long roleId);
+
 }

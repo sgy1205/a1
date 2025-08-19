@@ -28,8 +28,7 @@
         t1.update_time,
         t1.browse_number,
         t1.like_number,
-        (select count(*) from ms_collection t2 where t1.post_id=t2.post_id and t2.del_flag = 0 and t2.type = 1)
-        as collection_number,
+        t1.collection_number,
         t1.del_flag,
         t1.recommend,
         t2.user_id,
@@ -43,7 +42,7 @@
         JOIN
         user t2 ON t1.user_id = t2.user_id
         LEFT JOIN
-        tags_post tp ON t1.post_id = tp.post_id AND tp.post_type = 1
+        tags_post tp ON t1.post_id = tp.post_id
         Left Join
         post_audit t4 ON t1.post_id = t4.post_id
         <where>
@@ -67,9 +66,22 @@
             </if>
         </where>
         GROUP BY
-        t1.post_id, t1.title, t1.content, t1.create_time,
-        t1.browse_number, t1.like_number, t1.comment_number,
-        t2.user_id, t2.nick_name
+            t1.post_id,
+            t1.title,
+            t1.content,
+            t1.create_time,
+            t1.update_time,
+            t1.browse_number,
+            t1.like_number,
+            t1.collection_number,
+            t1.del_flag,
+            t1.recommend,
+            t1.node,
+            t2.user_id,
+            t2.nick_name,
+            t2.avatar,
+            t4.remark,
+            t4.audit_status
         ORDER BY
         t1.update_time DESC,t1.create_time DESC
     </select>
