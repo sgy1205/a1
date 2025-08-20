@@ -10,13 +10,6 @@ import java.util.List;
 public interface ISilenceService extends IService<Silence> {
 
     /**
-     * 更新用户禁言状态
-     * 定时任务，更新用户禁言状态,每60分钟执行一次
-     * @return
-     */
-    public void updateUserSilenceStatus();
-
-    /**
      * 根据用户ID更新用户禁言状态
      * @param userId
      * @return
@@ -53,6 +46,23 @@ public interface ISilenceService extends IService<Silence> {
      * @param signatureTime
      * @return
      */
-    public boolean silenceRemind(Long userId,String type,String signatureReason,Integer signatureTime);
+    public void silenceRemind(Long userId,String type,String signatureReason,Integer signatureTime);
 
+    /**
+     * 获取禁言时间结束，但仍然被禁言的用户ID
+     * @return
+     */
+    public List<Long> getSilenceCancelUserIdList();
+
+    /**
+     * 更新用户禁言状态
+     * @return
+     */
+    public Integer updateUserSilenceStatus();
+
+    /**
+     * 批量解除禁言消息通知
+     * @param userIds
+     */
+    public void batchRelieveSilenceRemind(List<Long> userIds);
 }

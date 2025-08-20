@@ -7,6 +7,7 @@ import org.springframework.data.redis.core.BoundSetOperations;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -235,20 +236,49 @@ public class RedisUtil {
     }
 
     /**
-     * 弹出数据并删除取出的数据
+     * 批量弹出并反序列化为对象列表（原子 Lua）
      * @param key Redis键
      * @param count 取出数量
      * @return
      * @param <T>
      */
-    public <T> List<T> popFromList(String key, long count) {
-        List<T> list = new ArrayList<>();
-        for (int i = 0; i < count; i++) {
-            T val = (T) redisTemplate.opsForList().leftPop(key);
-            if (val == null) break;
-            list.add(val);
+    public <T> List<T> popFromList(String key, long count, Class<T> clazz) {
+        if (count <= 0) {
+            return Collections.emptyList();
         }
-        return list;
+
+        String luaScript =
+                "local results = {} " +
+                        "local listLen = redis.call('llen', KEYS[1]) " +
+                        "if listLen == 0 then return results end " +
+                        "local popCount = math.min(tonumber(ARGV[1]), listLen) " +
+                        "for i = 1, popCount do " +
+                        "    local val = redis.call('lpop', KEYS[1]) " +
+                        "    if val then " +
+                        "        table.insert(results, val) " +
+                        "    else " +
+                        "        break " +
+                        "    end " +
+                        "end " +
+                        "return results";
+
+        // 直接返回List类型，而不是byte[][]
+        RedisScript<List> script = RedisScript.of(luaScript, List.class);
+
+        try {
+            // 直接获取反序列化后的对象列表
+            List<T> results = (List<T>) redisTemplate.execute(
+                    script,
+                    Collections.singletonList(key),
+                    count
+            );
+
+            return results != null ? results : Collections.emptyList();
+
+        } catch (Exception e) {
+            log.error("批量弹出列表失败, key={}, count={}", key, count, e);
+            return Collections.emptyList();
+        }
     }
 
     /**
@@ -259,5 +289,15 @@ public class RedisUtil {
      */
     public <T> void addToListTail(String key, T value) {
         redisTemplate.opsForList().rightPush(key, value);
+    }
+
+    /**
+     * 往 List 右侧批量追加数据（不会覆盖原有数据）
+     * @param key   键
+     * @param valueList 数据列表
+     * @return 追加后列表长度
+     */
+    public <T> void addAllToListTail(String key, List<T> valueList) {
+        redisTemplate.opsForList().rightPushAll(key, valueList);
     }
 }

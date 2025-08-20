@@ -13,8 +13,6 @@ import java.util.List;
 
 @Component
 public class NotificationTask {
-
-    private static final Logger log = LoggerFactory.getLogger(NotificationTask.class);
     @Autowired
     private RedisUtil redisUtil;
     @Autowired
@@ -25,7 +23,7 @@ public class NotificationTask {
      */
     @Scheduled(cron = "0/30 * * * * ?")// 每30秒执行一次
     public void checkNotifications() {
-        List<Notification> notifications = redisUtil.popFromList("notifications",300);
+        List<Notification> notifications = redisUtil.popFromList("notifications",300,Notification.class);
         if (notifications != null && !notifications.isEmpty()) {
             notificationService.addNotifications(notifications);
         }
