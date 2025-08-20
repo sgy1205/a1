@@ -6,6 +6,7 @@ import cn.smxy.forum.domain.param.update.UpdatePostAuditStatusDTO;
 import cn.smxy.forum.mapper.PostAuditMapper;
 import cn.smxy.forum.mapper.PostMapper;
 import cn.smxy.forum.service.IPostAuditService;
+import cn.smxy.forum.service.IPostService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,12 +18,21 @@ public class PostAuditServiceImpl extends ServiceImpl<PostAuditMapper, PostAudit
     @Autowired
     private PostAuditMapper postAuditMapper;
     @Autowired
-    private PostMapper postMapper;
+    private IPostService postService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Integer updatePostAuditStatus(UpdatePostAuditStatusDTO updatePostAuditStatusDTO) {
-        return postAuditMapper.updatePostAuditStatus(updatePostAuditStatusDTO);
+        Post post = postService.getById(updatePostAuditStatusDTO.getPostId());
+        if(postAuditMapper.updatePostAuditStatus(updatePostAuditStatusDTO)>0){
+            if(updatePostAuditStatusDTO.getAuditStatus()==1){
+                postService.addPostNotification("你的帖子："+post.getTitle()+"  审核通过",post.getUserId(),post.getPostId());
+            }else if(updatePostAuditStatusDTO.getAuditStatus()==2){
+                postService.addPostNotification("你的帖子："+post.getTitle()+"  审核未通过",post.getUserId(),post.getPostId());
+            }
+            return 1;
+        }else{
+            return 0;
+        }
     }
-
 }

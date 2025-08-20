@@ -16,4 +16,15 @@ public interface IPostService extends IService<Post> {
      */
     List<PostManagerPageListVo> getPostManagerPageListVo(PostManagerPageListDTO postManagerPageListDTO);
 
+    /**
+     * 添加帖子消息通知
+     */
+    void addPostNotification(String msg,Long userId,Long postId);
+
+    /**
+     * 修改帖子推荐状态
+     * @param postId
+     * @return
+     */
+    boolean postManagerRecommend(Long postId);
 }

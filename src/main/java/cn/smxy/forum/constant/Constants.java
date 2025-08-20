@@ -46,4 +46,29 @@ public class Constants {
      */
     public static final String DEFAULT_USER = "system"; // 可根据实际情况调整
 
+    /**
+     * 删除标志常量-删除
+     */
+    public static final String DELETE = "2";
+
+    /**
+     * 删除标志常量-恢复/未删除
+     */
+    public static final String NO_DELETE = "0";
+
+    /**
+     * 消息相关类型-用户
+     */
+    public static final String RELATED_TYPE_USER = "0";
+
+    /**
+     * 消息相关类型-帖子
+     */
+    public static final String RELATED_TYPE_POST = "1";
+
+    /**
+     * 消息相关类型-评论
+     */
+    public static final String RELATED_TYPE_COMMENT = "2";
+
 }

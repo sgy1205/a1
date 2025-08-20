@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static cn.smxy.forum.constant.Constants.*;
+
 @RestController
 @RequestMapping("/postManager")
 @Api(tags = "帖子管理模块")
@@ -41,29 +43,28 @@ public class PostManagerController extends BaseController {
     @ApiOperation("推荐 0-未推荐 1-推荐")
     @Transactional(rollbackFor = Exception.class)
     public R postManagerRecommend(@PathVariable("postId") Long postId) {
-        Post post = postService.getById(postId);
         PostAudit audit = postAuditService.getById(postId);
 
         if(audit.getAuditStatus().equals("0") || audit.getAuditStatus().equals("2")){
-            return R.fail("帖子未通过审核，无法推荐");
+            return R.fail("该帖子未通过审核无法推荐");
         }
 
-        if(post.getRecommend().equals("0")){
-            post.setRecommend("1");
+        if(postService.postManagerRecommend(postId)){
+            return R.ok();
         }else {
-            post.setRecommend("0");
+            return R.fail("修改审核状态失败");
         }
-        return postService.updateById(post)? R.ok():R.fail("修改推荐状态失败");
     }
 
     @DeleteMapping("/deletePost/{postId}")
     @ApiOperation("修改帖子删除状态")
     public R deletePost(@PathVariable("postId") Long postId) {
         Post post = postService.getById(postId);
-        if(post.getDelFlag().equals("0")){
-            post.setDelFlag("2");
-        }else if(post.getDelFlag().equals("2")){
-            post.setDelFlag("0");
+        if(post.getDelFlag().equals(NO_DELETE)){
+            post.setDelFlag(DELETE);
+        }else if(post.getDelFlag().equals(DELETE)){
+            post.setDelFlag(NO_DELETE);
+            postService.addPostNotification("你的帖子："+post.getTitle()+"  已恢复",post.getUserId(),postId);
         }
         return postService.updateById(post)?R.ok():R.fail("修改删除状态失败");
     }

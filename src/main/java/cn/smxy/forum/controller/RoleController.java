@@ -12,7 +12,6 @@ import cn.smxy.forum.mapping.RoleMapping;
 import cn.smxy.forum.service.IRoleService;
 import cn.smxy.forum.utils.R;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -22,6 +21,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
+
+import static cn.smxy.forum.constant.Constants.NO_DELETE;
 
 @RestController
 @RequestMapping("/role")
@@ -57,7 +58,7 @@ public class RoleController extends BaseController {
 
         LambdaQueryWrapper<Role> lqw=new LambdaQueryWrapper<>();
         lqw.eq(Role::getRoleName,addRoleDTO.getRoleName());
-        lqw.eq(Role::getDelFlag,"0");
+        lqw.eq(Role::getDelFlag,NO_DELETE);
 
         if(roleService.count(lqw)>0){
             return R.fail("添加失败，该角色名已存在");
@@ -83,7 +84,7 @@ public class RoleController extends BaseController {
 
         LambdaQueryWrapper<Role> lqw=new LambdaQueryWrapper<>();
         lqw.eq(Role::getRoleName,updateRoleDTO.getRoleName());
-        lqw.eq(Role::getDelFlag,"0");
+        lqw.eq(Role::getDelFlag,NO_DELETE);
         lqw.ne(Role::getRoleId,updateRoleDTO.getRoleId());
         if(roleService.count(lqw)>0){
             return R.fail("修改失败，该角色名已存在");

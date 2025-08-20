@@ -1,5 +1,7 @@
 package cn.smxy.forum.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.BoundSetOperations;
 import org.springframework.data.redis.core.HashOperations;
@@ -18,6 +20,7 @@ import java.util.concurrent.TimeUnit;
 @SuppressWarnings(value = {"unchecked", "rawtypes"})
 @Component
 public class RedisUtil {
+    private static final Logger log = LoggerFactory.getLogger(RedisUtil.class);
     @Autowired
     public RedisTemplate redisTemplate;
 
@@ -219,5 +222,42 @@ public class RedisUtil {
      */
     public Collection<String> keys(final String pattern) {
         return redisTemplate.keys(pattern);
+    }
+
+    /**
+     * 弹出数据并删除取出的数据
+     * @param key Redis键
+     * @return
+     * @param <T>
+     */
+    public <T> T popFromList(String key) {
+        return (T) redisTemplate.opsForList().leftPop(key);
+    }
+
+    /**
+     * 弹出数据并删除取出的数据
+     * @param key Redis键
+     * @param count 取出数量
+     * @return
+     * @param <T>
+     */
+    public <T> List<T> popFromList(String key, long count) {
+        List<T> list = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            T val = (T) redisTemplate.opsForList().leftPop(key);
+            if (val == null) break;
+            list.add(val);
+        }
+        return list;
+    }
+
+    /**
+     * 往 List 右侧追加一条数据（不会覆盖原有数据）
+     * @param key   键
+     * @param value 单条数据
+     * @return 追加后列表长度
+     */
+    public <T> void addToListTail(String key, T value) {
+        redisTemplate.opsForList().rightPush(key, value);
     }
 }
