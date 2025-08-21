@@ -1,7 +1,10 @@
 package cn.smxy.forum.service;
 
 import cn.smxy.forum.domain.entity.Points;
+import cn.smxy.forum.domain.vo.UserPointsRankVo;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 public interface IPointsService extends IService<Points> {
 
@@ -19,5 +22,11 @@ public interface IPointsService extends IService<Points> {
      * @return
      */
     Long getUserPoints(Long userId);
+
+    /**
+     * 获取登录积分排行列表
+     * @return
+     */
+    List<UserPointsRankVo> getUserPointsRank();
 
 }

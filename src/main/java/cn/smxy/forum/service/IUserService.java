@@ -3,14 +3,16 @@ package cn.smxy.forum.service;
 import cn.smxy.forum.domain.entity.User;
 import cn.smxy.forum.domain.other.UserManagerDetail;
 import cn.smxy.forum.domain.param.query.UserPageListDTO;
+import cn.smxy.forum.domain.param.update.UpdateUserCenterDetailDTO;
 import cn.smxy.forum.domain.param.update.UpdateUserDTO;
+import cn.smxy.forum.domain.vo.UserCenterListVo;
 import cn.smxy.forum.domain.vo.UserManagerPageListVo;
+import cn.smxy.forum.utils.R;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
 
 public interface IUserService extends IService<User> {
-
 
     /**
      * 获取用户管理分页查询
@@ -90,4 +92,40 @@ public interface IUserService extends IService<User> {
      */
     boolean updateUserPoints(Long userId, Integer points);
 
+    /**
+     * 获取用户中心用户数据
+     * @param userId
+     * @return
+     */
+    UserCenterListVo getUserCenterDetail(Long userId);
+
+    /**
+     * 更新redis里的用户信息
+     * @param userId
+     */
+    void updateRedisUser(Long userId);
+
+    /**
+     * 个人中心修改用户详情
+     * @param userId
+     * @param updateUserCenterDetailDTO
+     * @return
+     */
+    boolean updateUserCenterDetail(Long userId, UpdateUserCenterDetailDTO updateUserCenterDetailDTO);
+
+    /**
+     * 修改用户邮箱
+     * @param userId
+     * @param email
+     * @return
+     */
+    R updateUserEmail(Long userId, String email);
+
+    /**
+     * 修改用户背景
+     * @param userId
+     * @param background
+     * @return
+     */
+    R updateUserBackground(Long userId, String background);
 }

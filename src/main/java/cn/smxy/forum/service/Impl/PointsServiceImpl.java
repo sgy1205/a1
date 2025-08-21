@@ -2,6 +2,7 @@ package cn.smxy.forum.service.Impl;
 
 import cn.smxy.forum.domain.entity.Points;
 import cn.smxy.forum.domain.entity.User;
+import cn.smxy.forum.domain.vo.UserPointsRankVo;
 import cn.smxy.forum.mapper.PointsMapper;
 import cn.smxy.forum.service.IPointsService;
 import cn.smxy.forum.service.IUserService;
@@ -10,6 +11,9 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Collections;
+import java.util.List;
 
 @Service
 public class PointsServiceImpl extends ServiceImpl<PointsMapper, Points> implements IPointsService {
@@ -49,6 +53,11 @@ public class PointsServiceImpl extends ServiceImpl<PointsMapper, Points> impleme
     public Long getUserPoints(Long userId) {
         User user = userService.getById(userId);
         return user.getPoints();
+    }
+
+    @Override
+    public List<UserPointsRankVo> getUserPointsRank() {
+        return pointsMapper.getUserPointsRank();
     }
 
 

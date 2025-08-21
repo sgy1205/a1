@@ -4,4 +4,12 @@ import cn.smxy.forum.domain.entity.Comment;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 public interface ICommentService extends IService<Comment> {
+
+    /**
+     * 获取用户评论总数
+     * @param userId
+     * @return
+     */
+    Long getCommentCount(Long userId);
+
 }

@@ -12,7 +12,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ApiModel("用户管理的用户详情")
+@ApiModel("用户管理的修改用户详情参数")
 public class UpdateUserDTO {
     @ApiModelProperty(value = "用户ID",required = true)
     @NotNull(message = "用户ID不能为空")

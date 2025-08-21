@@ -2,20 +2,22 @@ package cn.smxy.forum.service.Impl;
 
 import cn.smxy.forum.domain.entity.Notification;
 import cn.smxy.forum.domain.entity.Post;
-import cn.smxy.forum.domain.entity.PostAudit;
 import cn.smxy.forum.domain.param.query.PostManagerPageListDTO;
+import cn.smxy.forum.domain.vo.PostListVo;
 import cn.smxy.forum.domain.vo.PostManagerPageListVo;
 import cn.smxy.forum.mapper.PostMapper;
-import cn.smxy.forum.service.IPostAuditService;
 import cn.smxy.forum.service.IPostService;
-import cn.smxy.forum.utils.R;
 import cn.smxy.forum.utils.RedisUtil;
+import cn.smxy.forum.utils.SecurityUtils;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+
+import static cn.smxy.forum.constant.Constants.*;
 
 @Service
 public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements IPostService {
@@ -61,6 +63,23 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements IP
             return true;
         }else{
             return false;
+        }
+    }
+
+    @Override
+    public Long getPostCount(Long userId) {
+        LambdaQueryWrapper<Post> lqw = new LambdaQueryWrapper<>();
+        lqw.eq(Post::getUserId,userId)
+                .eq(Post::getDelFlag,NO_DELETE);
+        return postMapper.selectCount(lqw);
+    }
+
+    @Override
+    public List<PostListVo> getUserCenterPostListVo(Long userId) {
+        if(userId.equals(SecurityUtils.getUserId())){
+            return postMapper.getOwnUserPostListVo(userId);
+        }else{
+            return postMapper.getOtherUserPostListVo(SecurityUtils.getUserId(),userId);
         }
     }
 }

@@ -2,4 +2,86 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.smxy.forum.mapper.ConcernMapper">
 
+    <select id="getConcernList" resultType="concernListVo">
+        SELECT
+            t2.user_id,
+            t2.nick_name,
+            t2.avatar,
+            t2.signature
+        FROM
+            concern AS t1
+                LEFT JOIN
+            user AS t2
+            ON
+                t1.user_id = t2.user_id
+        where
+            t1.del_flag = 0
+        and
+            t1.user_id = #{userId}
+        ORDER BY
+            t1.update_time DESC,t1.create_time DESC
+    </select>
+
+    <select id="getFansList" resultType="fansListVo">
+        SELECT
+            t2.user_id,
+            t2.nick_name,
+            t2.avatar,
+            t2.signature
+        FROM
+            concern AS t1
+                LEFT JOIN
+            user AS t2
+            ON
+                t1.user_id = t2.user_id
+        where
+            t1.del_flag = 0
+          and
+            t1.concern_id = #{userId}
+        ORDER BY
+            t1.update_time DESC,t1.create_time DESC
+    </select>
+
+    <select id="getUserCenterConcernList" resultType="concernListVo">
+        SELECT
+            t2.user_id,
+            t2.nick_name,
+            t2.avatar,
+            t2.signature
+        FROM
+            concern AS t1
+                LEFT JOIN
+            user AS t2
+            ON
+                t1.user_id = t2.user_id
+        where
+            t1.del_flag = 0
+          and
+            t1.user_id = #{userId}
+        ORDER BY
+            t1.update_time DESC,t1.create_time DESC
+        LIMIT 5
+    </select>
+
+    <select id="getUserCenterFansList" resultType="fansListVo">
+        SELECT
+            t2.user_id,
+            t2.nick_name,
+            t2.avatar,
+            t2.signature
+        FROM
+            concern AS t1
+                LEFT JOIN
+            user AS t2
+            ON
+                t1.user_id = t2.user_id
+        where
+            t1.del_flag = 0
+          and
+            t1.concern_id = #{userId}
+        ORDER BY
+            t1.update_time DESC,t1.create_time DESC
+        LIMIT 5
+    </select>
+
 </mapper>

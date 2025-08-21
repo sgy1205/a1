@@ -3,6 +3,7 @@ package cn.smxy.forum.service;
 import cn.smxy.forum.domain.entity.Post;
 import cn.smxy.forum.domain.param.query.PostManagerPageListDTO;
 import cn.smxy.forum.domain.vo.PostManagerPageListVo;
+import cn.smxy.forum.domain.vo.PostListVo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
@@ -27,4 +28,18 @@ public interface IPostService extends IService<Post> {
      * @return
      */
     boolean postManagerRecommend(Long postId);
+
+    /**
+     * 获取用户发的帖子总数
+     * @param userId
+     * @return
+     */
+    Long getPostCount(Long userId);
+
+    /**
+     * 获取用户中心帖子列表
+     * @param userId
+     * @return
+     */
+    List<PostListVo> getUserCenterPostListVo(Long userId);
 }

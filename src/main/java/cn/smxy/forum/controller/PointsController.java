@@ -4,6 +4,7 @@ import cn.smxy.forum.domain.entity.Points;
 import cn.smxy.forum.domain.other.TableDataInfo;
 import cn.smxy.forum.domain.param.other.PageQuery;
 import cn.smxy.forum.domain.vo.PointListVo;
+import cn.smxy.forum.domain.vo.UserPointsRankVo;
 import cn.smxy.forum.mapping.PointsMapping;
 import cn.smxy.forum.service.IPointsService;
 import cn.smxy.forum.utils.R;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -39,6 +41,15 @@ public class PointsController extends BaseController {
         List<PointListVo> pointListVos= PointsMapping.INSTANCE.toListVoList(pointsPage.getRecords());
 
         return getDataTable(pointListVos);
+    }
+
+    @GetMapping("/getUserPointsRank")
+    @ApiOperation("获取用户积分排行列表")
+    public TableDataInfo<List<UserPointsRankVo>> getUserPointsRank(@Validated PageQuery pageQuery) {
+        startPage();
+        List<UserPointsRankVo> userPointsRankVos =pointsService.getUserPointsRank();
+
+        return getDataTable(userPointsRankVos);
     }
 
 }
