@@ -17,6 +17,5 @@ public class Comment extends BaseEntity {
   private String commentContent;
   private Long likeNumber;
   private String delFlag;
-  private Long commentNumber;
 
 }

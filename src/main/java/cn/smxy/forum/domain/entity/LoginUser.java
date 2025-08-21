@@ -30,6 +30,9 @@ public class LoginUser implements UserDetails {
 // 权限集合需要转换成这种类型的Security才能判断
     private List<GrantedAuthority> authorities;
 
+    //连续签到天数
+    private String checkStr;
+
     // 写一个构造函数用来接收权限集合
     public LoginUser(User user, List<String> permissions) {
         this.user = user;

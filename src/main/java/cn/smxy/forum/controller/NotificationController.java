@@ -58,4 +58,16 @@ public class NotificationController extends BaseController {
         return R.to(notificationService.update(luw), "删除");
     }
 
+    @GetMapping("/unreadNotificationNum")
+    @ApiOperation("获取未读消息数量")
+    public R getUnreadNotificationNum() {
+        LambdaQueryWrapper<Notification> lqw = new LambdaQueryWrapper<>();
+        lqw.eq(Notification::getDelFlag,NO_DELETE)
+                .eq(Notification::getUserId,getUserId())
+                .eq(Notification::getReadStatus,0);
+
+        long count = notificationService.count(lqw);
+        return R.ok(count);
+    }
+
 }

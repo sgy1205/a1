@@ -13,4 +13,11 @@ public interface IPointsService extends IService<Points> {
      */
     boolean addPoints(Long userId,String pointType);
 
+    /**
+     * 获取用户积分数量
+     * @param userId
+     * @return
+     */
+    Long getUserPoints(Long userId);
+
 }

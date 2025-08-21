@@ -1,6 +1,7 @@
 package cn.smxy.forum.service.Impl;
 
 import cn.smxy.forum.domain.entity.Points;
+import cn.smxy.forum.domain.entity.User;
 import cn.smxy.forum.mapper.PointsMapper;
 import cn.smxy.forum.service.IPointsService;
 import cn.smxy.forum.service.IUserService;
@@ -43,4 +44,12 @@ public class PointsServiceImpl extends ServiceImpl<PointsMapper, Points> impleme
             }
         }
     }
+
+    @Override
+    public Long getUserPoints(Long userId) {
+        User user = userService.getById(userId);
+        return user.getPoints();
+    }
+
+
 }
