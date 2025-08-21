@@ -10,10 +10,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @MapperScan("cn.smxy.forum.mapper")
 @ComponentScan("cn.smxy")
-public class YearDesignApplication {
+public class FourmApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(YearDesignApplication.class, args);
+		SpringApplication.run(FourmApplication.class, args);
 	}
 
 }

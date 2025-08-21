@@ -16,6 +16,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -93,4 +94,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         user.setPassword(encoder.encode(newPassword));
         return userMapper.updateById(user)>0;
     }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean updateUserPoints(Long userId, Integer points) {
+        User user = userMapper.selectById(userId);
+        user.setPoints(user.getPoints()+points);
+        return userMapper.updateById(user)>0;
+    }
+
 }

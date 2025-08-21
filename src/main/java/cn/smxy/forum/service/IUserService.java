@@ -82,4 +82,12 @@ public interface IUserService extends IService<User> {
      */
     boolean updatePassword(Long userId,String oldpassword, String newPassword);
 
+    /**
+     * 添加用户积分
+     * @param userId
+     * @param points 添加积分数量
+     * @return
+     */
+    boolean updateUserPoints(Long userId, Integer points);
+
 }
