@@ -1,10 +1,13 @@
 package cn.smxy.forum.service;
 
 import cn.smxy.forum.domain.entity.Post;
+import cn.smxy.forum.domain.param.insert.AddPostDTO;
 import cn.smxy.forum.domain.param.query.HomePostPageListDTO;
 import cn.smxy.forum.domain.param.query.PostManagerPageListDTO;
+import cn.smxy.forum.domain.param.update.UpdatePostDTO;
 import cn.smxy.forum.domain.vo.PostManagerPageListVo;
 import cn.smxy.forum.domain.vo.PostListVo;
+import cn.smxy.forum.domain.vo.PostUpdateDetailVo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
@@ -58,4 +61,27 @@ public interface IPostService extends IService<Post> {
      * @return
      */
     List<PostListVo> getHomePostList(Long userId, HomePostPageListDTO postPageListDTO);
+
+    /**
+     * 添加帖子
+     * @param userId
+     * @param addPostDTO
+     * @return
+     */
+    Boolean addPost(Long userId, AddPostDTO addPostDTO);
+
+    /**
+     * 修改帖子
+     * @param post
+     * @param updatePostDTO
+     * @return
+     */
+    Boolean updatePost(Post post, UpdatePostDTO updatePostDTO);
+
+    /**
+     * 获取帖子修改时的帖子详情
+     * @param postId
+     * @return
+     */
+    PostUpdateDetailVo getPostDetail(Long postId);
 }

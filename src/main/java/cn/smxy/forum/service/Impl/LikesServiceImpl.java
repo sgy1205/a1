@@ -5,6 +5,7 @@ import cn.smxy.forum.domain.param.update.UpdateLikesDTO;
 import cn.smxy.forum.mapper.LikesMapper;
 import cn.smxy.forum.service.ICommentService;
 import cn.smxy.forum.service.ILikesService;
+import cn.smxy.forum.service.IPostAuditService;
 import cn.smxy.forum.service.IPostService;
 import cn.smxy.forum.utils.RedisUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -28,6 +29,8 @@ public class LikesServiceImpl extends ServiceImpl<LikesMapper, Likes> implements
     private IPostService postService;
     @Autowired
     private ICommentService commentService;
+    @Autowired
+    private IPostAuditService postAuditService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -37,6 +40,13 @@ public class LikesServiceImpl extends ServiceImpl<LikesMapper, Likes> implements
                 .eq(Likes::getTargetId, updateLikesDTO.getTargetId())
                 .eq(Likes::getType, updateLikesDTO.getType());
         Likes likes = likesMapper.selectOne(lqw);
+
+        if(updateLikesDTO.getType().equals("0")){
+            if(!postAuditService.getPostAuditStatus(updateLikesDTO.getTargetId())){
+                return false;
+            }
+        }
+
         if (likes == null) {
             likes = new Likes();
             likes.setUserId(userId);

@@ -3,6 +3,7 @@ package cn.smxy.forum.service.Impl;
 import cn.smxy.forum.domain.entity.*;
 import cn.smxy.forum.mapper.CollectionMapper;
 import cn.smxy.forum.service.ICollectionService;
+import cn.smxy.forum.service.IPostAuditService;
 import cn.smxy.forum.service.IPostService;
 import cn.smxy.forum.utils.RedisUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -24,10 +25,15 @@ public class CollectionServiceImpl extends ServiceImpl<CollectionMapper, Collect
     private RedisUtil redisUtil;
     @Autowired
     private IPostService postService;
+    @Autowired
+    private IPostAuditService postAuditService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean collectionPost(Long postId, Long userId) {
+    public Boolean collectionPost(Long postId, Long userId) {
+        if(!postAuditService.getPostAuditStatus(postId)){
+            return false;
+        }
         LambdaQueryWrapper<Collection> lqw = new LambdaQueryWrapper<>();
         lqw.eq(Collection::getPostId, postId)
                 .eq(Collection::getUserId, userId);

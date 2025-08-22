@@ -9,6 +9,7 @@ import cn.smxy.forum.service.IPointsService;
 import cn.smxy.forum.service.IPostAuditService;
 import cn.smxy.forum.service.IPostService;
 import cn.smxy.forum.service.IUserService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,18 @@ public class PostAuditServiceImpl extends ServiceImpl<PostAuditMapper, PostAudit
             return 1;
         }else{
             return 0;
+        }
+    }
+
+    @Override
+    public Boolean getPostAuditStatus(Long postId) {
+        LambdaQueryWrapper<PostAudit> lqw = new LambdaQueryWrapper<>();
+        lqw.eq(PostAudit::getPostId, postId);
+        PostAudit postAudit = postAuditMapper.selectOne(lqw);
+        if(postAudit.getAuditStatus().equals("1")){
+            return true;
+        }else {
+            return false;
         }
     }
 }

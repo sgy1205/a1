@@ -2,21 +2,32 @@ package cn.smxy.forum.service.Impl;
 
 import cn.smxy.forum.domain.entity.Notification;
 import cn.smxy.forum.domain.entity.Post;
+import cn.smxy.forum.domain.entity.PostAudit;
+import cn.smxy.forum.domain.entity.TagsPost;
+import cn.smxy.forum.domain.param.insert.AddPostDTO;
 import cn.smxy.forum.domain.param.query.HomePostPageListDTO;
 import cn.smxy.forum.domain.param.query.PostManagerPageListDTO;
+import cn.smxy.forum.domain.param.update.UpdatePostDTO;
 import cn.smxy.forum.domain.vo.PostListVo;
 import cn.smxy.forum.domain.vo.PostManagerPageListVo;
+import cn.smxy.forum.domain.vo.PostUpdateDetailVo;
 import cn.smxy.forum.mapper.PostMapper;
+import cn.smxy.forum.mapping.PostMapping;
+import cn.smxy.forum.service.IPostAuditService;
 import cn.smxy.forum.service.IPostService;
+import cn.smxy.forum.service.ITagsPostService;
 import cn.smxy.forum.utils.RedisUtil;
 import cn.smxy.forum.utils.SecurityUtils;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
+
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static cn.smxy.forum.constant.Constants.*;
 
@@ -27,6 +38,11 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements IP
     private PostMapper postMapper;
     @Autowired
     private RedisUtil redisUtil;
+    @Autowired
+    @Lazy
+    private IPostAuditService postAuditService;
+    @Autowired
+    private ITagsPostService tagsPostService;
 
     @Override
     public List<PostManagerPageListVo> getPostManagerPageListVo(PostManagerPageListDTO postManagerPageListDTO) {
@@ -93,4 +109,64 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements IP
     public List<PostListVo> getHomePostList(Long userId, HomePostPageListDTO postPageListDTO) {
         return postMapper.getHomePostList(userId,postPageListDTO);
     }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Boolean addPost(Long userId, AddPostDTO addPostDTO) {
+        Post post = PostMapping.INSTANCE.toPost(addPostDTO);
+        post.setUserId(userId);
+        PostAudit postAudit = new PostAudit();
+        if(postMapper.insert(post)>0){
+            postAudit.setPostId(post.getPostId());
+            if(postAuditService.save(postAudit)){
+                post.setPostAuditId(postAudit.getPostAuditId());
+                tagsPostService.addTagsPost(post.getPostId(),addPostDTO.getTagsIds());
+                return postMapper.updateById(post)>0;
+            }else {
+                return false;
+            }
+        }else {
+            return false;
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Boolean updatePost(Post post, UpdatePostDTO updatePostDTO) {
+        post.setTitle(updatePostDTO.getTitle());
+        post.setContent(updatePostDTO.getContent());
+        post.setNode(updatePostDTO.getNode());
+
+        if(postMapper.updateById(post)>0){
+            LambdaQueryWrapper<PostAudit> lqw = new LambdaQueryWrapper<>();
+            lqw.eq(PostAudit::getPostId,post.getPostId());
+            PostAudit postAudit = postAuditService.getOne(lqw);
+            postAudit.setAuditStatus("0");
+            if(postAuditService.updateById(postAudit)){
+                tagsPostService.deleteTagsPost(post.getPostId());
+                return tagsPostService.addTagsPost(post.getPostId(),updatePostDTO.getTagsIds());
+            }else {
+                return false;
+            }
+        }else {
+            return false;
+        }
+    }
+
+    @Override
+    public PostUpdateDetailVo getPostDetail(Long postId) {
+        PostUpdateDetailVo postUpdateDetailVo = PostMapping.INSTANCE.toPostUpdateDetailVo(postMapper.selectById(postId));
+        LambdaQueryWrapper<TagsPost> lqw = new LambdaQueryWrapper<>();
+        lqw.eq(TagsPost::getPostId,postId);
+        List<TagsPost> tagsPosts = tagsPostService.list(lqw);
+        List<Long> tagIds = tagsPosts.stream()
+                .map(TagsPost::getTagsId)  // 假设 TagsPost 有 getTagsId() 方法
+                .collect(Collectors.toList());
+
+        postUpdateDetailVo.setTagsIds(tagIds);
+
+        return postUpdateDetailVo;
+    }
+
+
 }

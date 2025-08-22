@@ -13,4 +13,11 @@ public interface IPostAuditService extends IService<PostAudit> {
      */
     Integer updatePostAuditStatus(UpdatePostAuditStatusDTO updatePostAuditStatusDTO);
 
+    /**
+     * 获取帖子是否通过审核
+     * @param postId
+     * @return
+     */
+    Boolean getPostAuditStatus(Long postId);
+
 }

@@ -13,7 +13,7 @@ public interface ICollectionService extends IService<Collection> {
      * @param userId 用户ID
      * @return
      */
-    boolean collectionPost(Long postId,Long userId);
+    Boolean collectionPost(Long postId,Long userId);
 
     /**
      * 修改帖子收藏状态（保存到redis中）
