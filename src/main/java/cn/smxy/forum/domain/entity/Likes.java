@@ -12,7 +12,7 @@ public class Likes extends BaseEntity {
   private Long likesId;
   private Long userId;
   private String type;
-  private Long postId;
+  private Long targetId;
   private String delFlag;
 
 }

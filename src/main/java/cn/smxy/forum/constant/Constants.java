@@ -81,4 +81,9 @@ public class Constants {
      */
     public static final String REDIS_NOTIFICATIONS_KEY = "notifications";
 
+    /**
+     * 修改点赞状态的redis的key
+     */
+    public static final String REDIS_LIKES_KEY = "likes";
+
 }

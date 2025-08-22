@@ -15,7 +15,7 @@ public class CollectionController extends BaseController {
     @Autowired
     private ICollectionService collectionService;
 
-    @PutMapping("/{postId}")
+    @PostMapping("/{postId}")
     @ApiOperation("修改帖子收藏状态")
     public R collectionPost(@PathVariable("postId") Long postId) {
         return R.to(collectionService.collectionPost(postId,getUserId()),"收藏");

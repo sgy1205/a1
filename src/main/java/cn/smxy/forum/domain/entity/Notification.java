@@ -17,6 +17,7 @@ public class Notification extends BaseEntity {
   private Long relatedId;
   private String relatedType;
   private Long readStatus;
+  private Long carrierId;
   private String delFlag;
   private Long operatorId;
   private String avatar;
