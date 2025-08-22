@@ -1,6 +1,7 @@
 package cn.smxy.forum.mapper;
 
 import cn.smxy.forum.domain.entity.Post;
+import cn.smxy.forum.domain.param.query.HomePostPageListDTO;
 import cn.smxy.forum.domain.param.query.PostManagerPageListDTO;
 import cn.smxy.forum.domain.param.update.UpdatePostAuditStatusDTO;
 import cn.smxy.forum.domain.vo.PostListVo;
@@ -33,5 +34,20 @@ public interface PostMapper extends BaseMapper<Post> {
      * @return
      */
     List<PostListVo> getOtherUserPostListVo(@Param("userId") Long userId,@Param("otherUserId") Long otherUserId);
+
+    /**
+     * 获取用户收藏的帖子列表
+     * @param userId
+     * @return
+     */
+    List<PostListVo> getUserCollection(@Param("userId") Long userId);
+
+    /**
+     * 获取首页帖子列表
+     * @param userId
+     * @param postPageListDTO
+     * @return
+     */
+    List<PostListVo> getHomePostList(@Param("userId") Long userId,@Param("postPageListDTO") HomePostPageListDTO postPageListDTO);
 
 }

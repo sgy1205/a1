@@ -86,7 +86,7 @@ public class ConcernServiceImpl extends ServiceImpl<ConcernMapper, Concern> impl
         notification.setNotificationId(userId);
         notification.setAvatar(user.getAvatar());
 
-        redisUtil.addToListTail("notifications",notification);
+        redisUtil.addToListTail(REDIS_NOTIFICATIONS_KEY,notification);
     }
 
     @Override

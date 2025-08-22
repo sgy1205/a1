@@ -11,6 +11,4 @@ public class Tags extends BaseEntity {
   @TableId(type = IdType.AUTO)
   private Long tagsId;
   private String tagsName;
-  private String delFlag;
-  private String remark;
 }

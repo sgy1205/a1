@@ -19,6 +19,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import static cn.smxy.forum.constant.Constants.REDIS_NOTIFICATIONS_KEY;
+
 @Service
 public class SilenceServiceImpl extends ServiceImpl<SilenceMapper, Silence> implements ISilenceService {
 
@@ -132,7 +134,7 @@ public class SilenceServiceImpl extends ServiceImpl<SilenceMapper, Silence> impl
         }else if(type.equals("2")){
             notification.setMessage("你的禁言状态被修改，禁言时间为"+signatureTime+"天");
         }
-        redisUtil.addToListTail("notifications",notification);
+        redisUtil.addToListTail(REDIS_NOTIFICATIONS_KEY,notification);
     }
 
     @Override
@@ -160,7 +162,7 @@ public class SilenceServiceImpl extends ServiceImpl<SilenceMapper, Silence> impl
             notification.setType("0");
             notifications.add(notification);
         }
-        redisUtil.addAllToListTail("notifications", notifications);
+        redisUtil.addAllToListTail(REDIS_NOTIFICATIONS_KEY, notifications);
     }
 
 }

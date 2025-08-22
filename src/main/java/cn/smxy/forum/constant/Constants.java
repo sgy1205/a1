@@ -71,4 +71,14 @@ public class Constants {
      */
     public static final String RELATED_TYPE_COMMENT = "2";
 
+    /**
+     * 修改帖子收藏状态的redis的key
+     */
+    public static final String REDIS_UPDATECOLLECTION_KEY = "updateCollections";
+
+    /**
+     * 消息提醒的redis的key
+     */
+    public static final String REDIS_NOTIFICATIONS_KEY = "notifications";
+
 }

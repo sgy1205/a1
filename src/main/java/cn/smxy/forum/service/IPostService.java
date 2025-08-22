@@ -1,6 +1,7 @@
 package cn.smxy.forum.service;
 
 import cn.smxy.forum.domain.entity.Post;
+import cn.smxy.forum.domain.param.query.HomePostPageListDTO;
 import cn.smxy.forum.domain.param.query.PostManagerPageListDTO;
 import cn.smxy.forum.domain.vo.PostManagerPageListVo;
 import cn.smxy.forum.domain.vo.PostListVo;
@@ -42,4 +43,19 @@ public interface IPostService extends IService<Post> {
      * @return
      */
     List<PostListVo> getUserCenterPostListVo(Long userId);
+
+    /**
+     * 获取用户收藏的帖子列表
+     * @param userId
+     * @return
+     */
+    List<PostListVo> getUserCollection(Long userId);
+
+    /**
+     * 获取首页帖子列表
+     * @param userId
+     * @param postPageListDTO
+     * @return
+     */
+    List<PostListVo> getHomePostList(Long userId, HomePostPageListDTO postPageListDTO);
 }

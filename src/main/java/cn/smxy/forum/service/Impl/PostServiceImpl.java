@@ -2,6 +2,7 @@ package cn.smxy.forum.service.Impl;
 
 import cn.smxy.forum.domain.entity.Notification;
 import cn.smxy.forum.domain.entity.Post;
+import cn.smxy.forum.domain.param.query.HomePostPageListDTO;
 import cn.smxy.forum.domain.param.query.PostManagerPageListDTO;
 import cn.smxy.forum.domain.vo.PostListVo;
 import cn.smxy.forum.domain.vo.PostManagerPageListVo;
@@ -40,7 +41,7 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements IP
         notification.setType("0");
         notification.setRelatedId(postId);
         notification.setRelatedType("1");
-        redisUtil.addToListTail("notifications", notification);
+        redisUtil.addToListTail(REDIS_NOTIFICATIONS_KEY, notification);
     }
 
     @Override
@@ -81,5 +82,15 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements IP
         }else{
             return postMapper.getOtherUserPostListVo(SecurityUtils.getUserId(),userId);
         }
+    }
+
+    @Override
+    public List<PostListVo> getUserCollection(Long userId) {
+        return postMapper.getUserCollection(userId);
+    }
+
+    @Override
+    public List<PostListVo> getHomePostList(Long userId, HomePostPageListDTO postPageListDTO) {
+        return postMapper.getHomePostList(userId,postPageListDTO);
     }
 }

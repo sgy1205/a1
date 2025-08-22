@@ -1,5 +1,6 @@
 package cn.smxy.forum.controller;
 
+import cn.smxy.forum.domain.other.TableDataInfo;
 import cn.smxy.forum.domain.param.other.PageQuery;
 import cn.smxy.forum.domain.param.update.UpdateUserCenterDetailDTO;
 import cn.smxy.forum.domain.param.update.UpdateUserEmailDTO;
@@ -52,8 +53,15 @@ public class UserCenterController extends BaseController {
 
     @GetMapping("/userCenterPost")
     @ApiOperation("获取用户帖子列表")
-    public R<List<PostListVo>> getUserCenterPostList(@Validated PageQuery pageQuery, Long userId){
+    public TableDataInfo<List<PostListVo>> getUserCenterPostList(@Validated PageQuery pageQuery, Long userId){
         startPage();
-        return R.ok(postService.getUserCenterPostListVo(userId));
+        return getDataTable(postService.getUserCenterPostListVo(userId));
+    }
+
+    @GetMapping("/userCollection")
+    @ApiOperation("获取用户收藏帖子列表")
+    public TableDataInfo<List<PostListVo>> getUserCollection(@Validated PageQuery pageQuery){
+        startPage();
+        return getDataTable(postService.getUserCollection(getUserId()));
     }
 }

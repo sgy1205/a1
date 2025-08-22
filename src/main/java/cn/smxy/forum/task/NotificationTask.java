@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+import static cn.smxy.forum.constant.Constants.REDIS_NOTIFICATIONS_KEY;
+
 @Component
 public class NotificationTask {
     @Autowired
@@ -21,9 +23,9 @@ public class NotificationTask {
     /**
      * 从redis取出保存的消息列表，储存到数据库
      */
-    @Scheduled(cron = "0/30 * * * * ?")// 每30秒执行一次
+    @Scheduled(cron = "0/10 * * * * ?")// 每10秒执行一次
     public void checkNotifications() {
-        List<Notification> notifications = redisUtil.popFromList("notifications",300,Notification.class);
+        List<Notification> notifications = redisUtil.popFromList(REDIS_NOTIFICATIONS_KEY,300,Notification.class);
         if (notifications != null && !notifications.isEmpty()) {
             notificationService.addNotifications(notifications);
         }
