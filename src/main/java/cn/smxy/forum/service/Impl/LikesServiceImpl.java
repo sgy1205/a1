@@ -3,12 +3,14 @@ package cn.smxy.forum.service.Impl;
 import cn.smxy.forum.domain.entity.*;
 import cn.smxy.forum.domain.param.update.UpdateLikesDTO;
 import cn.smxy.forum.mapper.LikesMapper;
+import cn.smxy.forum.mapper.PostMapper;
 import cn.smxy.forum.service.ICommentService;
 import cn.smxy.forum.service.ILikesService;
 import cn.smxy.forum.service.IPostAuditService;
 import cn.smxy.forum.service.IPostService;
 import cn.smxy.forum.utils.RedisUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.conditions.update.LambdaUpdateChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,8 +56,14 @@ public class LikesServiceImpl extends ServiceImpl<LikesMapper, Likes> implements
             likes.setType(updateLikesDTO.getType());
             if(likesMapper.insert(likes)>0){
                 if(updateLikesDTO.getType().equals("0")){
+                    //帖子点赞数修改
+                    postService.incrementPostLikes(updateLikesDTO.getTargetId(),1L);
+                    //消息提醒
                     likesNotification(userId,0L,updateLikesDTO.getTargetId(),updateLikesDTO.getType());
                 }else{
+                    //评论点赞数修改
+                    commentService.incrementCommentLikes(updateLikesDTO.getTargetId(),1L);
+                    //消息提醒
                     likesNotification(userId,updateLikesDTO.getPostId(),updateLikesDTO.getTargetId(),updateLikesDTO.getType());
                 }
                 return true;
@@ -65,11 +73,24 @@ public class LikesServiceImpl extends ServiceImpl<LikesMapper, Likes> implements
         }else{
             if(likes.getDelFlag().equals(NO_DELETE)){
                 likes.setDelFlag(DELETE);
+                if(updateLikesDTO.getType().equals("0")){
+                    //帖子点赞数修改
+                    postService.incrementPostLikes(updateLikesDTO.getTargetId(),-1L);
+                }else{
+                    //评论点赞数修改
+                    commentService.incrementCommentLikes(updateLikesDTO.getTargetId(),-1L);
+                }
             }else{
                 likes.setDelFlag(NO_DELETE);
                 if(updateLikesDTO.getType().equals("0")){
+                    //帖子点赞数修改
+                    postService.incrementPostLikes(updateLikesDTO.getTargetId(),1L);
+                    //消息提醒
                     likesNotification(userId,0L,updateLikesDTO.getTargetId(),updateLikesDTO.getType());
                 }else{
+                    //评论点赞数修改
+                    commentService.incrementCommentLikes(updateLikesDTO.getTargetId(),1L);
+                    //消息提醒
                     likesNotification(userId,updateLikesDTO.getPostId(),updateLikesDTO.getTargetId(),updateLikesDTO.getType());
                 }
             }

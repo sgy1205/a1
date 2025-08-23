@@ -86,4 +86,29 @@ public class Constants {
      */
     public static final String REDIS_LIKES_KEY = "likes";
 
+    /**
+     * 修改帖子点赞数的redis的key
+     */
+    public static final String REDIS_POSTLIKES_INCRCOUNTKEY = "postLikesIncrCount";
+
+    /**
+     * 修改帖子收藏数量的redis的key
+     */
+    public static final String REDIS_POSTCOLLECTION_INCRCOUNTKEY="postCollectionIncrCount";
+
+    /**
+     * 修改帖子浏览量的redis的key
+     */
+    public static final String REDIS_POSTBROWSE_INCRCOUNTKEY="postBrowseIncrCount";
+
+    /**
+     * 修改帖子评论数的redis的key
+     */
+    public static final String REDIS_POSTCOMMENT_INCRCOUNTKEY="posstCommentIncrCount";
+
+    /**
+     * 修改评论点赞数的redis的key
+     */
+    public static final String REDIS_COMMENTLIKES_INCRCOUNTKEY = "commentLikesIncrCount";
+
 }

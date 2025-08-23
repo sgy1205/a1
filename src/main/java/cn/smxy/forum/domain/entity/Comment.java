@@ -12,7 +12,6 @@ public class Comment extends BaseEntity {
   private Long commentId;
   private Long userId;
   private String commentType;
-  private Long postId;
   private Long parentId;
   private String commentContent;
   private Long likeNumber;

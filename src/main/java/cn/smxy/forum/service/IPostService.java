@@ -1,14 +1,20 @@
 package cn.smxy.forum.service;
 
 import cn.smxy.forum.domain.entity.Post;
+import cn.smxy.forum.domain.other.UpdatePostBrowseNumber;
+import cn.smxy.forum.domain.other.UpdatePostCollectionNumber;
+import cn.smxy.forum.domain.other.UpdatePostCommentNumber;
+import cn.smxy.forum.domain.other.UpdatePostLikesNumber;
 import cn.smxy.forum.domain.param.insert.AddPostDTO;
 import cn.smxy.forum.domain.param.query.HomePostPageListDTO;
 import cn.smxy.forum.domain.param.query.PostManagerPageListDTO;
 import cn.smxy.forum.domain.param.update.UpdatePostDTO;
+import cn.smxy.forum.domain.vo.PostDetailVo;
 import cn.smxy.forum.domain.vo.PostManagerPageListVo;
 import cn.smxy.forum.domain.vo.PostListVo;
 import cn.smxy.forum.domain.vo.PostUpdateDetailVo;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -84,4 +90,65 @@ public interface IPostService extends IService<Post> {
      * @return
      */
     PostUpdateDetailVo getPostDetail(Long postId);
+
+    /**
+     * 点击帖子时的帖子详情
+     * @param userId 登录用户ID
+     * @param postId 帖子ID
+     * @return
+     */
+    PostDetailVo getPostDetailToView(Long userId,Long postId);
+
+    /**
+     * 帖子点赞数修改(redis)
+     * @param postId
+     * @return
+     */
+    void incrementPostLikes(Long postId,Long count);
+
+    /**
+     * 帖子评论数修改(redis)
+     * @param postId
+     * @return
+     */
+    void incrementPostComment(Long postId,Long count);
+
+    /**
+     * 帖子收藏数修改(redis)
+     * @param postId
+     * @return
+     */
+    void incrementPostCollection(Long postId,Long count);
+
+    /**
+     * 帖子浏览数修改(redis)
+     * @param postId
+     * @return
+     */
+    void incrementPostBrowse(Long postId,Long count);
+
+    /**
+     * 修改帖子点赞数(数据库)
+     * @return
+     */
+    Integer updatePostLikesNumber(List<UpdatePostLikesNumber> updatePostLikesNumber);
+
+    /**
+     * 修改帖子收藏数(数据库)
+     * @return
+     */
+    Integer updatePostCollectionNumber(List<UpdatePostCollectionNumber> updatePostCollectionNumber);
+
+    /**
+     * 修改帖子评论数(数据库)
+     * @return
+     */
+    Integer updatePostCommentNumber(List<UpdatePostCommentNumber> updatePostCommentNumber);
+
+
+    /**
+     * 修改帖子浏览量(数据库)
+     * @return
+     */
+    Integer updatePostBrowseNumber(List<UpdatePostBrowseNumber> updatePostBrowseNumber);
 }

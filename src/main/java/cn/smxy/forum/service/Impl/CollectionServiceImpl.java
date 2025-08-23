@@ -44,6 +44,7 @@ public class CollectionServiceImpl extends ServiceImpl<CollectionMapper, Collect
             collection.setUserId(userId);
 
             if(collectionMapper.insert(collection)>0){
+                postService.incrementPostCollection(postId,1L);
                 this.collectNotification(userId,postId);
                 return true;
             }else{
@@ -52,8 +53,10 @@ public class CollectionServiceImpl extends ServiceImpl<CollectionMapper, Collect
         }else{
             if(collection.getDelFlag().equals(NO_DELETE)){
                 collection.setDelFlag(DELETE);
+                postService.incrementPostCollection(postId,-1L);
             }else{
                 collection.setDelFlag(NO_DELETE);
+                postService.incrementPostCollection(postId,1L);
                 this.collectNotification(userId,postId);
             }
             this.updateCollectionPostToRedis(collection);

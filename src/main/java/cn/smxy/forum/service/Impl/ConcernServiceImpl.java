@@ -1,6 +1,7 @@
 package cn.smxy.forum.service.Impl;
 
 import cn.smxy.forum.domain.entity.Concern;
+import cn.smxy.forum.domain.entity.LoginUser;
 import cn.smxy.forum.domain.entity.Notification;
 import cn.smxy.forum.domain.entity.User;
 import cn.smxy.forum.domain.vo.ConcernListVo;
@@ -76,7 +77,8 @@ public class ConcernServiceImpl extends ServiceImpl<ConcernMapper, Concern> impl
 
     @Override
     public void concernRemind(Long userId, Long concernId) {
-        User user = userService.getById(userId);
+        LoginUser loginUser = redisUtil.getCacheObject("user:" + userId);
+        User user=loginUser.getUser();
         Notification notification = new Notification();
         notification.setUserId(concernId);
         notification.setType("1");

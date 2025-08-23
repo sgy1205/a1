@@ -239,5 +239,123 @@
             </if>
         </where>
 
+        <choose>
+            <!-- 按创建时间倒序（最新优先） -->
+            <when test="orderType == 1">
+                ORDER BY t1.create_time DESC,t1.like_number DESC
+            </when>
+
+            <!-- 按点赞数倒序（热门优先） -->
+            <when test="orderType == 2">
+                ORDER BY t1.like_number DESC,t1.create_time DESC
+            </when>
+
+            <!-- 默认：创建时间倒序 -->
+            <otherwise>
+                ORDER BY t1.create_time DESC,t1.like_number DESC
+            </otherwise>
+        </choose>
+
     </select>
+
+    <select id="getPostDetailToView" resultType="postDetailVo">
+        SELECT
+            t1.post_id,
+            t1.title,
+            t1.node,
+            t1.content,
+            t1.create_time,
+            t1.update_time,
+            t1.like_number,
+            t1.comment_number,
+            t1.collection_number,
+            t1.browse_number,
+            t1.user_id,
+            t2.nick_name,
+            t3.audit_status,
+
+            CASE
+                WHEN t4.likes_id IS NOT NULL THEN '1'
+                ELSE '0'
+                END                  AS like_status,
+
+            CASE
+                WHEN t5.collection_id IS NOT NULL THEN '1'
+                ELSE '0'
+                END                  AS collection_status
+
+        FROM post t1
+                 INNER JOIN post_audit t3 ON t1.post_audit_id = t3.post_audit_id
+                 INNER JOIN user   t2 ON t1.user_id       = t2.user_id
+                 LEFT  JOIN likes      t4 ON t4.target_id     = t1.post_id
+            AND t4.type          = '0'
+            AND t4.user_id       = #{userId}
+            AND t4.del_flag      = '0'
+                 LEFT  JOIN collection t5 ON t5.post_id       = t1.post_id
+            AND t5.user_id       = #{userId}
+            AND t5.del_flag      = '0'
+
+        WHERE t1.post_id   = #{postId}
+          AND t1.del_flag  = '0'
+    </select>
+
+    <update id="updatePostLikesNumber">
+        UPDATE post
+        SET like_number = like_number +
+        CASE post_id
+        <foreach collection="list" item="item">
+            WHEN #{item.postId} THEN #{item.likesNumber}
+        </foreach>
+        ELSE 0  <!-- 添加 ELSE 0 -->
+        END
+        WHERE post_id IN
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item.postId}
+        </foreach>
+    </update>
+
+    <update id="updatePostCollectionNumber">
+        UPDATE post
+        SET collection_number = collection_number +
+        CASE post_id
+        <foreach collection="list" item="item">
+            WHEN #{item.postId} THEN #{item.collectionNumber}
+        </foreach>
+        ELSE 0  <!-- 添加 ELSE 0 -->
+        END
+        WHERE post_id IN
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item.postId}
+        </foreach>
+    </update>
+
+    <update id="updatePostCommentNumber">
+        UPDATE post
+        SET comment_number = comment_number +
+        CASE post_id
+        <foreach collection="list" item="item">
+            WHEN #{item.postId} THEN #{item.commentNumber}
+        </foreach>
+        ELSE 0  <!-- 添加 ELSE 0 -->
+        END
+        WHERE post_id IN
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item.postId}
+        </foreach>
+    </update>
+
+    <update id="updatePostBrowseNumber">
+        UPDATE post
+        SET browse_number = browse_number +
+        CASE post_id
+        <foreach collection="list" item="item">
+            WHEN #{item.postId} THEN #{item.browseNumber}
+        </foreach>
+        ELSE 0  <!-- 添加 ELSE 0 -->
+        END
+        WHERE post_id IN
+        <foreach collection="list" item="item" open="(" separator="," close=")">
+            #{item.postId}
+        </foreach>
+    </update>
 </mapper>

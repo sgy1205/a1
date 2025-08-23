@@ -4,10 +4,15 @@ import cn.smxy.forum.domain.entity.Notification;
 import cn.smxy.forum.domain.entity.Post;
 import cn.smxy.forum.domain.entity.PostAudit;
 import cn.smxy.forum.domain.entity.TagsPost;
+import cn.smxy.forum.domain.other.UpdatePostBrowseNumber;
+import cn.smxy.forum.domain.other.UpdatePostCollectionNumber;
+import cn.smxy.forum.domain.other.UpdatePostCommentNumber;
+import cn.smxy.forum.domain.other.UpdatePostLikesNumber;
 import cn.smxy.forum.domain.param.insert.AddPostDTO;
 import cn.smxy.forum.domain.param.query.HomePostPageListDTO;
 import cn.smxy.forum.domain.param.query.PostManagerPageListDTO;
 import cn.smxy.forum.domain.param.update.UpdatePostDTO;
+import cn.smxy.forum.domain.vo.PostDetailVo;
 import cn.smxy.forum.domain.vo.PostListVo;
 import cn.smxy.forum.domain.vo.PostManagerPageListVo;
 import cn.smxy.forum.domain.vo.PostUpdateDetailVo;
@@ -19,6 +24,7 @@ import cn.smxy.forum.service.ITagsPostService;
 import cn.smxy.forum.utils.RedisUtil;
 import cn.smxy.forum.utils.SecurityUtils;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.conditions.update.LambdaUpdateChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -107,7 +113,12 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements IP
 
     @Override
     public List<PostListVo> getHomePostList(Long userId, HomePostPageListDTO postPageListDTO) {
-        return postMapper.getHomePostList(userId,postPageListDTO);
+        if(postPageListDTO.getNode().isEmpty() && postPageListDTO.getRecommend().isEmpty() && postPageListDTO.getConcernStatus().isEmpty()){
+            return postMapper.getHomePostList(userId,postPageListDTO,"1");
+        }else{
+            return postMapper.getHomePostList(userId,postPageListDTO,"2");
+        }
+
     }
 
     @Override
@@ -166,6 +177,58 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements IP
         postUpdateDetailVo.setTagsIds(tagIds);
 
         return postUpdateDetailVo;
+    }
+
+    @Override
+    public PostDetailVo getPostDetailToView(Long userId, Long postId) {
+        if(postAuditService.getPostAuditStatus(postId)){
+            this.incrementPostBrowse(postId,1L);
+        }
+        return postMapper.getPostDetailToView(userId,postId);
+    }
+
+    @Override
+    public void incrementPostLikes(Long postId,Long count) {
+        redisUtil.incrCount(REDIS_POSTLIKES_INCRCOUNTKEY,postId,count);
+    }
+
+    @Override
+    public void incrementPostComment(Long postId,Long count) {
+        redisUtil.incrCount(REDIS_POSTCOMMENT_INCRCOUNTKEY,postId,count);
+    }
+
+    @Override
+    public void incrementPostCollection(Long postId,Long count) {
+        redisUtil.incrCount(REDIS_POSTCOLLECTION_INCRCOUNTKEY,postId,count);
+    }
+
+    @Override
+    public void incrementPostBrowse(Long postId,Long count) {
+        redisUtil.incrCount(REDIS_POSTBROWSE_INCRCOUNTKEY,postId,count);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Integer updatePostLikesNumber(List<UpdatePostLikesNumber> updatePostLikesNumber) {
+        return postMapper.updatePostLikesNumber(updatePostLikesNumber);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Integer updatePostCollectionNumber(List<UpdatePostCollectionNumber> updatePostCollectionNumber) {
+        return postMapper.updatePostCollectionNumber(updatePostCollectionNumber);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Integer updatePostCommentNumber(List<UpdatePostCommentNumber> updatePostCommentNumber) {
+        return postMapper.updatePostCommentNumber(updatePostCommentNumber);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Integer updatePostBrowseNumber(List<UpdatePostBrowseNumber> updatePostBrowseNumber) {
+        return postMapper.updatePostBrowseNumber(updatePostBrowseNumber);
     }
 
 

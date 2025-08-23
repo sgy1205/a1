@@ -3,6 +3,7 @@ package cn.smxy.forum.controller;
 import cn.smxy.forum.domain.entity.Post;
 import cn.smxy.forum.domain.param.insert.AddPostDTO;
 import cn.smxy.forum.domain.param.update.UpdatePostDTO;
+import cn.smxy.forum.domain.vo.PostDetailVo;
 import cn.smxy.forum.domain.vo.PostUpdateDetailVo;
 import cn.smxy.forum.service.IPostService;
 import cn.smxy.forum.utils.R;
@@ -51,4 +52,9 @@ public class PostController extends BaseController {
         return R.ok(postService.getPostDetail(postId));
     }
 
+    @GetMapping("/detaiil/{postId}")
+    @ApiOperation("查看帖子详情")
+    public R<PostDetailVo> getPostDetailToView(@PathVariable("postId")Long postId){
+        return R.ok(postService.getPostDetailToView(getUserId(),postId));
+    }
 }

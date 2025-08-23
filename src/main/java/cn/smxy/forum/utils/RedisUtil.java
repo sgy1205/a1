@@ -10,6 +10,7 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.stereotype.Component;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -299,5 +300,41 @@ public class RedisUtil {
      */
     public <T> void addAllToListTail(String key, List<T> valueList) {
         redisTemplate.opsForList().rightPushAll(key, valueList);
+    }
+
+    /**
+     * 通用计数器：为指定 key 下某个 field 原子累加 delta
+     * @param key   Redis Hash 的 key（如 "postLikesUpdate"、"goodsStock" 等）
+     * @param id    业务主键，转成 String 作为 Hash 的 field
+     * @param delta 变化量：+1、-1、+5、-10 均可
+     */
+    public void incrCount(String key, Serializable id, long delta) {
+        redisTemplate.opsForHash().increment(key, String.valueOf(id), delta);
+    }
+
+    /**
+     * 原子读取整个 Hash 并立即删除，返回 Map<String, Object>
+     * @param key Redis Hash 的 key
+     * @return Map<String, Object>（空则返回 emptyMap）
+     */
+    public Map<String, Object> popHashAndDelete(String key) {
+        String lua =
+                "local data = redis.call('HGETALL', KEYS[1]) " +
+                        "redis.call('DEL', KEYS[1]) " +
+                        "return data";
+
+        List<String> raw = (List<String>) redisTemplate.execute(
+                RedisScript.of(lua, List.class),
+                Collections.singletonList(key));
+
+        if (raw == null || raw.isEmpty()) {
+            return Collections.emptyMap();
+        }
+
+        Map<String, Object> result = new HashMap<>(raw.size() >> 1);
+        for (int i = 0; i < raw.size(); i += 2) {
+            result.put(raw.get(i), raw.get(i + 1));
+        }
+        return result;
     }
 }
