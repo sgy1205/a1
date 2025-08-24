@@ -55,4 +55,11 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     public Integer deleteUserRole(Long roleId) {
         return roleMapper.deleteUserRole(roleId);
     }
+
+    @Override
+    public Integer addUserCommonRole(Long userId) {
+        return roleMapper.addUserCommonRole(2L,userId);
+    }
+
+
 }

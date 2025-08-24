@@ -54,4 +54,11 @@ public interface IRoleService extends IService<Role> {
      */
     Integer deleteUserRole(Long roleId);
 
+    /**
+     * 为用户添加普通角色权限
+     * @param userId
+     * @return
+     */
+    Integer addUserCommonRole(Long userId);
+
 }

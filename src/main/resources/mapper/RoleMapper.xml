@@ -38,4 +38,8 @@
     <delete id="deleteUserRole">
         DELETE FROM user_role where role_id = #{roleId}
     </delete>
+
+    <insert id="addUserCommonRole">
+        insert into user_role (user_id,role_id) values (#{userId},#{roleId})
+    </insert>
 </mapper>

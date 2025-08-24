@@ -22,6 +22,6 @@ public class RegisterController {
     @PostMapping("/register")
     @ApiOperation("注册")
     public R register(@RequestBody RegisterDTO registerDTO) {
-        return registerService.register(registerDTO)?R.ok():R.fail("注册失败");
+        return registerService.register(registerDTO);
     }
 }

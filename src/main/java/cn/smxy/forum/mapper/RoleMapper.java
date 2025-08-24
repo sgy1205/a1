@@ -52,4 +52,12 @@ public interface RoleMapper extends BaseMapper<Role> {
      * @return
      */
     Integer deleteUserRole(@Param("roleId") Long roleId);
+
+    /**
+     * 为用户添加普通角色权限
+     * @param roleId
+     * @param userId
+     * @return
+     */
+    Integer addUserCommonRole(@Param("roleId") Long roleId, @Param("userId") Long userId);
 }
