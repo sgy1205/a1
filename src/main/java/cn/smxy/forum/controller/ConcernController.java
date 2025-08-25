@@ -1,5 +1,7 @@
 package cn.smxy.forum.controller;
 
+import cn.smxy.forum.domain.other.TableDataInfo;
+import cn.smxy.forum.domain.param.other.PageQuery;
 import cn.smxy.forum.domain.vo.ConcernListVo;
 import cn.smxy.forum.domain.vo.FansListVo;
 import cn.smxy.forum.service.IConcernService;
@@ -7,6 +9,7 @@ import cn.smxy.forum.utils.R;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,12 +31,15 @@ public class ConcernController extends BaseController {
 
     @GetMapping("/concernList")
     @ApiOperation("获取关注列表")
-    public R<List<ConcernListVo>> getConcernList(){
-        return R.ok(concernService.getConcernList(getUserId()));
+    public TableDataInfo<List<ConcernListVo>> getConcernList(@Validated PageQuery pageQuery, Long userId){
+        startPage();
+        return getDataTable(concernService.getConcernList(userId));
     }
 
     @GetMapping("/fansList")
-    public R<List<FansListVo>> getFansList(){
-        return R.ok(concernService.getFansList(getUserId()));
+    @ApiOperation("获取粉丝列表")
+    public TableDataInfo<List<FansListVo>> getFansList(@Validated PageQuery pageQuery,Long userId){
+        startPage();
+        return getDataTable(concernService.getFansList(userId));
     }
 }

@@ -70,4 +70,11 @@ public class NotificationController extends BaseController {
         return R.ok(count);
     }
 
+    @PutMapping("/{notificationId}")
+    @ApiOperation("将单条消息状态改为已读")
+    public R updateNotificationStatus(@PathVariable("notificationId") Long notificationId) {
+        LambdaUpdateWrapper<Notification> luw = new LambdaUpdateWrapper<>();
+        luw.set(Notification::getReadStatus,1).eq(Notification::getNotificationId,notificationId);
+        return R.to(notificationService.update(luw),"修改");
+    }
 }

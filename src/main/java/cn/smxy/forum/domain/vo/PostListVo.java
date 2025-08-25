@@ -9,8 +9,14 @@ import java.util.Date;
 @Data
 @ApiModel("获取用户中心帖子列表")
 public class PostListVo {
+    @ApiModelProperty("用户ID")
+    private Long userId;
     @ApiModelProperty("帖子ID")
     private Long postId;
+    @ApiModelProperty("用户头像")
+    private String avatar;
+    @ApiModelProperty("昵称")
+    private String nickName;
     @ApiModelProperty("标题")
     private String title;
     @ApiModelProperty("内容")
@@ -27,4 +33,6 @@ public class PostListVo {
     private Long commentNumber;
     @ApiModelProperty("点赞状态 0-未点赞 1-已点赞")
     private String likeStatus;
+    @ApiModelProperty("审核状态")
+    private String auditStatus;
 }

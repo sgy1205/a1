@@ -23,7 +23,7 @@ public class LikesTask {
     /**
      * 从redis取出要修改的收藏列表，储存到数据库
      */
-    @Scheduled(cron = "0/5 * * * * ?")// 每5秒执行一次
+    @Scheduled(cron = "0/2 * * * * ?")// 每2秒执行一次
     public void likesUpdate(){
         List<Likes> likes = redisUtil.popFromList(REDIS_LIKES_KEY, 300, Likes.class);
         if (likes != null && !likes.isEmpty()) {

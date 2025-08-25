@@ -15,6 +15,9 @@ import java.util.List;
 @ApiModel("用户个人中心信息")
 public class UserCenterListVo {
 
+    @ApiModelProperty("账号")
+    private String userName;
+
     @ApiModelProperty("用户头像")
     private String avatar;
 

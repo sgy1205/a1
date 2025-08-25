@@ -26,7 +26,7 @@ public class RegisterServiceImpl implements IRegisterService {
     public R register(RegisterDTO registerDTO) {
         User user= new User();
         LambdaQueryWrapper<User> lqw = new LambdaQueryWrapper<>();
-        lqw.eq(User::getUserName, registerDTO.getUserName())
+        lqw.eq(User::getUserName, registerDTO.getUserName()).or()
                 .eq(User::getEmail, registerDTO.getEmail())
                 .eq(User::getDelFlag,NO_DELETE);
         if(userService.count(lqw)>0){
@@ -35,6 +35,7 @@ public class RegisterServiceImpl implements IRegisterService {
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
             registerDTO.setPassword(encoder.encode(registerDTO.getPassword()));
             BeanUtils.copyProperties(registerDTO, user);
+            user.setNickName(user.getUserName());
             if(userService.save(user)){
                 user.setRegisterRank(user.getUserId());
                 roleService.addUserCommonRole(user.getUserId());

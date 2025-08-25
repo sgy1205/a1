@@ -34,8 +34,8 @@ public class CommentTask {
         List<UpdateCommentLikesNumber> list = cacheMap.entrySet()
                 .stream()
                 .map(e -> new UpdateCommentLikesNumber(
-                        Long.valueOf(e.getKey()),
-                        Long.valueOf(e.getValue().toString())))
+                        Long.valueOf(String.valueOf(e.getKey())),
+                        Long.valueOf(String.valueOf(e.getValue()))))
                 .collect(Collectors.toList());
 
         commentService.updateCommentLikesNumber(list);

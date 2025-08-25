@@ -133,6 +133,9 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
 
     @Override
     public void commentNotification(String type, Long userId, Long commentUserId,Long relatedId) {
+        if(userId .equals(commentUserId)){
+            return;
+        }
         LoginUser loginUser=redisUtil.getCacheObject("user:" + commentUserId);
         User user = loginUser.getUser();
 

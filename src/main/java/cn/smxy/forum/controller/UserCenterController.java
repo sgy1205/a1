@@ -33,13 +33,13 @@ public class UserCenterController extends BaseController {
         return R.ok(userService.getUserCenterDetail(userId));
     }
 
-    @PostMapping("/updateUserDetail")
+    @PutMapping("/updateUserDetail")
     @ApiOperation("修改用户详情")
     public R updateUserCenterDetail(@RequestBody UpdateUserCenterDetailDTO updateUserCenterDetailDTO){
         return R.to(userService.updateUserCenterDetail(getUserId(),updateUserCenterDetailDTO),"修改");
     }
 
-    @PostMapping("/updateEmail")
+    @PutMapping("/updateEmail")
     @ApiOperation("修改用户邮箱")
     public R updateUserEmail(@Validated UpdateUserEmailDTO updateUserEmailDTO){
         return userService.updateUserEmail(getUserId(),updateUserEmailDTO.getEmail());

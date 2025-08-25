@@ -9,6 +9,7 @@ import cn.smxy.forum.service.ILikesService;
 import cn.smxy.forum.service.IPostAuditService;
 import cn.smxy.forum.service.IPostService;
 import cn.smxy.forum.utils.RedisUtil;
+import cn.smxy.forum.utils.SecurityUtils;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.conditions.update.LambdaUpdateChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -117,11 +118,17 @@ public class LikesServiceImpl extends ServiceImpl<LikesMapper, Likes> implements
         Notification notification = new Notification();
         if(type.equals("0")){
             Post post = postService.getById(targetId);
+            if(post.getUserId().equals(user.getUserId())){
+                return;
+            }
             notification.setUserId(post.getUserId());
             notification.setMessage("你的帖子："+post.getTitle()+"被 "+user.getNickName()+" 点赞");
             notification.setRelatedType("1");
         }else{
             Comment comment = commentService.getById(targetId);
+            if(comment.getUserId().equals(user.getUserId())){
+                return;
+            }
             notification.setUserId(comment.getUserId());
             notification.setMessage(user.getNickName()+" 赞了你的评论");
             notification.setRelatedType("2");

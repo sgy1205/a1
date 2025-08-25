@@ -35,8 +35,8 @@ public class PostTask {
         List<UpdatePostLikesNumber> list = cacheMap.entrySet()
                 .stream()
                 .map(e -> new UpdatePostLikesNumber(
-                        Long.valueOf(e.getKey()),
-                        Long.valueOf(e.getValue().toString())))
+                        Long.valueOf(String.valueOf(e.getKey())),
+                        Long.valueOf(String.valueOf(e.getValue()))))
                 .collect(Collectors.toList());
 
         postService.updatePostLikesNumber(list);
@@ -54,8 +54,8 @@ public class PostTask {
         List<UpdatePostCollectionNumber> list = cacheMap.entrySet()
                 .stream()
                 .map(e -> new UpdatePostCollectionNumber(
-                        Long.valueOf(e.getKey()),
-                        Long.valueOf(e.getValue().toString())))
+                        Long.valueOf(String.valueOf(e.getKey())),
+                        Long.valueOf(String.valueOf(e.getValue()))))
                 .collect(Collectors.toList());
 
         postService.updatePostCollectionNumber(list);
@@ -73,8 +73,8 @@ public class PostTask {
         List<UpdatePostCommentNumber> list = cacheMap.entrySet()
                 .stream()
                 .map(e -> new UpdatePostCommentNumber(
-                        Long.valueOf(e.getKey()),
-                        Long.valueOf(e.getValue().toString())))
+                        Long.valueOf(String.valueOf(e.getKey())),
+                        Long.valueOf(String.valueOf(e.getValue()))))
                 .collect(Collectors.toList());
 
         postService.updatePostCommentNumber(list);
@@ -93,8 +93,8 @@ public class PostTask {
         List<UpdatePostBrowseNumber> list = cacheMap.entrySet()
                 .stream()
                 .map(e -> new UpdatePostBrowseNumber(
-                        Long.valueOf(e.getKey()),
-                        Long.valueOf(e.getValue().toString())))
+                        Long.valueOf(String.valueOf(e.getKey())),
+                        Long.valueOf(String.valueOf(e.getValue()))))
                 .collect(Collectors.toList());
 
         postService.updatePostBrowseNumber(list);

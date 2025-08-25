@@ -17,6 +17,4 @@ public class RegisterDTO {
     private String password;
     @ApiModelProperty("邮箱")
     private String email;
-    @ApiModelProperty("电话号码")
-    private String phonenumber;
 }

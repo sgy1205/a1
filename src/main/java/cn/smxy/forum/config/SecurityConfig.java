@@ -53,7 +53,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 // 放行预检请求、登录、注册、静态资源等
                 .antMatchers(HttpMethod.OPTIONS).permitAll()  // 关键：放行OPTIONS
-                .antMatchers("/login", "/register").anonymous()
+                .antMatchers("/login", "/register","/getCaptchaImage").anonymous()
                 .antMatchers(
                         HttpMethod.GET,
                         "/", "/*.html", "/**/*.html", "/**/*.css", "/**/*.js", "/profile/**"

@@ -22,7 +22,7 @@ public class CollectionTask {
     /**
      * 从redis取出要修改的收藏列表，储存到数据库
      */
-    @Scheduled(cron = "0/5 * * * * ?")// 每5秒执行一次
+    @Scheduled(cron = "0/2 * * * * ?")// 每2秒执行一次
     public void collectionUpdate(){
         List<Collection> collections = redisUtil.popFromList(REDIS_UPDATECOLLECTION_KEY, 300, Collection.class);
         if (collections != null && !collections.isEmpty()) {

@@ -80,6 +80,9 @@ public class CollectionServiceImpl extends ServiceImpl<CollectionMapper, Collect
         Post post = postService.getById(postId);
         LoginUser loginUser = redisUtil.getCacheObject("user:" + userId);
         User user = loginUser.getUser();
+        if(user.getUserId().equals(post.getUserId())){
+            return;
+        }
         Notification notification = new Notification();
         notification.setUserId(post.getUserId());
         notification.setType("1");
