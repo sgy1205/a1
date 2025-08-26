@@ -25,7 +25,7 @@ public class ConcernController extends BaseController {
     @PutMapping("/{userId}")
     @ApiOperation("修改关注状态")
     public R updateConcern(@PathVariable("userId") Long userId) {
-        return R.to(concernService.updateConcern(userId),"关注");
+        return R.to(concernService.updateConcern(userId),"修改关注状态");
     }
 
 

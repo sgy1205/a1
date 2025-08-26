@@ -113,7 +113,7 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements IP
 
     @Override
     public List<PostListVo> getHomePostList(Long userId, HomePostPageListDTO postPageListDTO) {
-        if(postPageListDTO.getNode().isEmpty() && postPageListDTO.getRecommend().isEmpty() && postPageListDTO.getConcernStatus().isEmpty()){
+        if(postPageListDTO.getNode() ==null && postPageListDTO.getRecommend()==null && postPageListDTO.getConcernStatus()==null){
             return postMapper.getHomePostList(userId,postPageListDTO,"1");
         }else{
             return postMapper.getHomePostList(userId,postPageListDTO,"2");

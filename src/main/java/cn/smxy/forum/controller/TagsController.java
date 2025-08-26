@@ -57,11 +57,7 @@ public class TagsController {
     @GetMapping()
     @ApiOperation("获取推荐的标签")
     public R<List<TagsListVo>> getRecommendTagsList(){
-        LambdaQueryWrapper<Tags> lqw = new LambdaQueryWrapper<>();
-        lqw.orderByDesc(Tags::getCreateTime).last("limit 5");
-        List<Tags> list = tagsService.list(lqw);
-
-        return R.ok(TagsMapping.INSTANCE.toTagsListVos(list));
+        return R.ok(TagsMapping.INSTANCE.toTagsListVos(tagsService.getRecommendTagsList()));
     }
 
 }

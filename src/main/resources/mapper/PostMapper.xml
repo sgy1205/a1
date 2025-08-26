@@ -254,6 +254,9 @@
                 OR t1.title LIKE CONCAT('%', #{postPageListDTO.searchContent}, '%')
                 )
             </if>
+            <if test="postPageListDTO.node != null and postPageListDTO.node != ''">
+                AND t1.node = #{postPageListDTO.node}
+            </if>
             <choose>
                 <when test="postPageListDTO.timeFrame == 1">
                     AND t1.create_time >= DATE_SUB(NOW(), INTERVAL 1 DAY)

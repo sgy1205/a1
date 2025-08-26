@@ -45,7 +45,7 @@ public class UserCenterController extends BaseController {
         return userService.updateUserEmail(getUserId(),updateUserEmailDTO.getEmail());
     }
 
-    @PostMapping("/updateUserBackground")
+    @PutMapping("/updateUserBackground")
     @ApiOperation("修改用户背景")
     public R updateUserBackground(@Validated @RequestParam(required = true) String background){
         return userService.updateUserBackground(getUserId(),background);

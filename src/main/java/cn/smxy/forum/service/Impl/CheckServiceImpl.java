@@ -4,6 +4,7 @@ import cn.smxy.forum.domain.entity.Check;
 import cn.smxy.forum.domain.entity.LoginUser;
 import cn.smxy.forum.mapper.CheckMapper;
 import cn.smxy.forum.service.ICheckService;
+import cn.smxy.forum.service.IPointsService;
 import cn.smxy.forum.utils.R;
 import cn.smxy.forum.utils.RedisUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 @Service
 public class CheckServiceImpl extends ServiceImpl<CheckMapper, Check> implements ICheckService {
@@ -21,6 +23,8 @@ public class CheckServiceImpl extends ServiceImpl<CheckMapper, Check> implements
     private CheckMapper checkMapper;
     @Autowired
     private RedisUtil redisUtil;
+    @Autowired
+    private IPointsService pointsService;
 
     @Override
     public boolean getCheckStatus(Long userId) {
@@ -33,7 +37,7 @@ public class CheckServiceImpl extends ServiceImpl<CheckMapper, Check> implements
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         String formattedDate = today.format(formatter);
 
-        if(checkStr.isEmpty()){
+        if(checkStr==null || checkStr.isEmpty()){
             //redis没有
             LambdaQueryWrapper<Check> lqw = new LambdaQueryWrapper<>();
             lqw.eq(Check::getUserId, userId)
@@ -64,13 +68,11 @@ public class CheckServiceImpl extends ServiceImpl<CheckMapper, Check> implements
 
         String verifyKey="user:" + userId;
         LoginUser loginUser = redisUtil.getCacheObject(verifyKey);
-        String checkStr=loginUser.getCheckStr();
 
         LocalDate today = LocalDate.now();
         LocalDate yesterday = today.minusDays(1);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         String formattedDate = today.format(formatter);
-        String formattedYesterday = yesterday.format(formatter);
 
         LambdaQueryWrapper<Check> lqw=new LambdaQueryWrapper<>();
         lqw.eq(Check::getUserId,userId)
@@ -81,7 +83,9 @@ public class CheckServiceImpl extends ServiceImpl<CheckMapper, Check> implements
         if(check==null){
             newCheck.setUserId(userId);
             newCheck.setCheckNum(1L);
-            if(checkMapper.insert(check)>0){
+            newCheck.setCheckTime(new Date());
+            if(checkMapper.insert(newCheck)>0){
+                pointsService.addPoints(userId,"0");
                 loginUser.setCheckStr(formattedDate+""+newCheck.getCheckNum());
                 redisUtil.setCacheObject(verifyKey,loginUser);
                 return R.ok();
@@ -91,7 +95,9 @@ public class CheckServiceImpl extends ServiceImpl<CheckMapper, Check> implements
         }else{
             newCheck.setUserId(userId);
             newCheck.setCheckNum(check.getCheckNum()+1);
-            if(checkMapper.insert(check)>0){
+            newCheck.setCheckTime(new Date());
+            if(checkMapper.insert(newCheck)>0){
+                pointsService.addPoints(userId,"0");
                 loginUser.setCheckStr(formattedDate+""+newCheck.getCheckNum());
                 redisUtil.setCacheObject(verifyKey,loginUser);
                 return R.ok();
