@@ -53,17 +53,22 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         Comment comment = new Comment();
         comment.setUserId(userId);
         comment.setCommentContent(commentDTO.getCommentContent());
-        comment.setCommentType(commentDTO.getCommenyType());
+        comment.setCommentType(commentDTO.getCommentType());
         comment.setParentId(commentDTO.getParentId());
+        if(comment.getCommentType().equals("0")){
+            postService.incrementPostComment(commentDTO.getParentId(),1L);
+        }
 
-        this.commentNotification(commentDTO.getCommenyType(),commentDTO.getUserId()
-                ,userId,commentDTO.getParentId());
+        this.commentNotification(commentDTO.getCommentType(),userId,commentDTO.getParentId());
         return commentMapper.insert(comment)>0;
     }
 
     @Override
     public Boolean deleteComment(Comment comment) {
         comment.setDelFlag(DELETE);
+        if(comment.getCommentType().equals("0")){
+            postService.incrementPostComment(comment.getParentId(),-1L);
+        }
         return commentMapper.updateById(comment)>0;
     }
 
@@ -132,29 +137,34 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     }
 
     @Override
-    public void commentNotification(String type, Long userId, Long commentUserId,Long relatedId) {
-        if(userId .equals(commentUserId)){
-            return;
-        }
+    public void commentNotification(String type,Long commentUserId,Long relatedId) {
         LoginUser loginUser=redisUtil.getCacheObject("user:" + commentUserId);
         User user = loginUser.getUser();
 
         Notification notification = new Notification();
-        notification.setUserId(userId);
         notification.setType("1");
         notification.setRelatedId(relatedId);
         if(type.equals("0")){
             Post post = postService.getById(relatedId);
+            if(post.getUserId().equals(commentUserId)){
+                return;
+            }
             notification.setMessage("你的帖子："+post.getTitle()+" 获得一条新的评论");
+            notification.setUserId(post.getUserId());
             notification.setRelatedType("1");
         }else{
             Comment comment = commentMapper.selectById(relatedId);
+            if(comment.getUserId().equals(commentUserId)){
+                return;
+            }
+            notification.setUserId(comment.getUserId());
             notification.setMessage("你的评论获得一条新的回复");
             notification.setRelatedType("2");
             notification.setCarrierId(comment.getParentId());
         }
         notification.setOperatorId(user.getUserId());
         notification.setAvatar(user.getAvatar());
+        redisUtil.addToListTail(REDIS_NOTIFICATIONS_KEY,notification);
     }
 
 }

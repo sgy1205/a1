@@ -90,4 +90,9 @@ public interface PostMapper extends BaseMapper<Post> {
      * @return
      */
     Integer updatePostBrowseNumber(List<UpdatePostBrowseNumber> updatePostBrowseNumber);
+
+    /**
+     * 获取用户帖子数量
+     */
+    Long getPostCount(@Param("userId") Long userId);
 }

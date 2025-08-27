@@ -6,6 +6,7 @@ import cn.smxy.forum.domain.param.update.UpdatePostDTO;
 import cn.smxy.forum.domain.vo.PostDetailVo;
 import cn.smxy.forum.domain.vo.PostUpdateDetailVo;
 import cn.smxy.forum.service.IPostService;
+import cn.smxy.forum.service.ITagsService;
 import cn.smxy.forum.utils.R;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -21,6 +22,8 @@ public class PostController extends BaseController {
 
     @Autowired
     private IPostService postService;
+    @Autowired
+    private ITagsService tagsService;
 
     @PostMapping()
     @ApiOperation("添加帖子")
@@ -52,9 +55,11 @@ public class PostController extends BaseController {
         return R.ok(postService.getPostDetail(postId));
     }
 
-    @GetMapping("/detaiil/{postId}")
+    @GetMapping("/detail/{postId}")
     @ApiOperation("查看帖子详情")
     public R<PostDetailVo> getPostDetailToView(@PathVariable("postId")Long postId){
-        return R.ok(postService.getPostDetailToView(getUserId(),postId));
+        PostDetailVo postDetailToView = postService.getPostDetailToView(getUserId(), postId);
+        postDetailToView.setTagsList(tagsService.getTagsListVoByPostId(postId));
+        return R.ok(postDetailToView);
     }
 }

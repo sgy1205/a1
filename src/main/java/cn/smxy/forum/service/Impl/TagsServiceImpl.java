@@ -1,6 +1,7 @@
 package cn.smxy.forum.service.Impl;
 
 import cn.smxy.forum.domain.entity.Tags;
+import cn.smxy.forum.domain.vo.TagsListVo;
 import cn.smxy.forum.mapper.TagsMapper;
 import cn.smxy.forum.service.ITagsService;
 import cn.smxy.forum.utils.RedisUtil;
@@ -32,5 +33,10 @@ public class TagsServiceImpl extends ServiceImpl<TagsMapper, Tags> implements IT
             redisUtil.setCacheObject(verifyKey, list,1440, TimeUnit.MINUTES);
         }
         return list;
+    }
+
+    @Override
+    public List<TagsListVo> getTagsListVoByPostId(Long postId) {
+        return tagsMapper.getTagsListVoByPostId(postId);
     }
 }

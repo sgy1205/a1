@@ -30,7 +30,7 @@ public class CommentController extends BaseController {
     @ApiOperation("删除评论")
     public R deleteComment(@PathVariable("commentId") Long commentId) {
         Comment comment = commentService.getById(commentId);
-        if(comment.getUserId().equals(getUserId())){
+        if(!comment.getUserId().equals(getUserId())){
             return R.fail("你无权删除他人评论");
         }else {
             return R.to(commentService.deleteComment(comment),"删除");

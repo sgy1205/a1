@@ -72,9 +72,8 @@ public interface ICommentService extends IService<Comment> {
     /**
      * 评论消息提醒
      * @param type 类别 0-帖子 1-评论
-     * @param userId 接收消息的用户ID
      * @param commentUserId 评论的用户ID
      * @param relatedId 评论的帖子或评论ID
      */
-    void commentNotification(String type,Long userId,Long commentUserId,Long relatedId);
+    void commentNotification(String type,Long commentUserId,Long relatedId);
 }

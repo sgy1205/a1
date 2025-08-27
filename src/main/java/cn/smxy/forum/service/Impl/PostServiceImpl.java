@@ -91,10 +91,7 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements IP
 
     @Override
     public Long getPostCount(Long userId) {
-        LambdaQueryWrapper<Post> lqw = new LambdaQueryWrapper<>();
-        lqw.eq(Post::getUserId,userId)
-                .eq(Post::getDelFlag,NO_DELETE);
-        return postMapper.selectCount(lqw);
+        return postMapper.getPostCount(userId);
     }
 
     @Override

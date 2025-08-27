@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @ApiModel("帖子详情数据")
@@ -39,4 +40,8 @@ public class PostDetailVo {
     private Long userId;
     @ApiModelProperty("作者昵称")
     private String nickName;
+    @ApiModelProperty("作者头像")
+    private String avatar;
+    @ApiModelProperty("帖子标签列表")
+    private List<TagsListVo> tagsList;
 }

@@ -22,7 +22,7 @@ public class LikesController extends BaseController{
     @PostMapping()
     @ApiOperation("修改点赞状态")
     public R updateLikes(@RequestBody UpdateLikesDTO updateLikesDTO){
-        return R.to(likesService.updateLikes(getUserId(),updateLikesDTO),"点赞");
+        return R.to(likesService.updateLikes(getUserId(),updateLikesDTO),"修改点赞状态");
     }
 
 }

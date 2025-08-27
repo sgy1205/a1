@@ -27,12 +27,13 @@
                 t2.create_time,
                 t2.like_number,
                 t2.parent_id,
-                t2.comment_id as root_id,  -- 根评论的root_id就是自己
+                t2.comment_type,  -- 添加 comment_type 字段
+                t2.comment_id as root_id,
                 0 as level,
                 CAST(t2.comment_id AS CHAR(255)) AS path
             FROM comment t2
             WHERE t2.parent_id = #{postId}
-              AND t2.comment_type = '0'  -- 类型为字符'0'
+              AND t2.comment_type = '0'
               AND t2.del_flag = '0'
 
             UNION ALL
@@ -45,12 +46,13 @@
                 t3.create_time,
                 t3.like_number,
                 t3.parent_id,
-                t1.root_id,  -- 继承根评论ID
+                t3.comment_type,  -- 添加 comment_type 字段
+                t1.root_id,
                 t1.level + 1 as level,
                 CONCAT(t1.path, ',', t3.comment_id) AS path
             FROM comment t3
-                     INNER JOIN t1 ON t3.parent_id = t1.comment_id  -- 使用parent_id关联
-            WHERE t3.comment_type = '1'  -- 子评论类型为'1'
+                     INNER JOIN t1 ON t3.parent_id = t1.comment_id
+            WHERE t3.comment_type = '1'
               AND t3.del_flag = '0'
         )
 
@@ -62,35 +64,32 @@
             t1.like_number,
             t4.nick_name,
             t4.avatar,
-            t1.parent_id,  -- 使用parent_id而不是reply_id
+            t1.parent_id,
             t1.root_id,
             t1.level,
-
-            -- 被回复用户的昵称（通过parent_id关联获取）
             t5.nick_name as reply_nick_name,
-
-            -- 子评论数量
             (SELECT COUNT(*) FROM comment t6
              WHERE t6.parent_id = t1.comment_id
                AND t6.comment_type = '1'
                AND t6.del_flag = '0') as child_number,
-
-            -- 排序路径
             t1.path as sort_path,
-
-            -- 当前用户点赞状态（1-已点赞，0-未点赞）
-            CASE WHEN t8.likes_id IS NOT NULL THEN 1 ELSE 0 END as like_status
+            CASE
+                WHEN #{userId} IS NULL THEN 0
+                WHEN EXISTS (
+                    SELECT 1 FROM likes t8
+                    WHERE t8.target_id = t1.comment_id
+                      AND t8.type = '1'
+                      AND t8.del_flag = '0'
+                      AND t8.user_id = #{userId}
+                ) THEN 1
+                ELSE 0
+                END as like_status
 
         FROM t1
                  LEFT JOIN user t4 ON t1.user_id = t4.user_id
-            -- 通过parent_id获取父评论，然后获取父评论的用户信息
-                 LEFT JOIN comment t7 ON t1.parent_id = t7.comment_id  -- 获取父评论
-                 LEFT JOIN user t5 ON t7.user_id = t5.user_id  -- 获取父评论用户的昵称
-        -- 关联点赞表，查询当前用户对每条评论的点赞状态
-                 LEFT JOIN likes t8 ON t1.comment_id = t8.target_id
-            AND t8.type = '1'  -- 类型'1'表示评论
-            AND t8.del_flag = '0'
-            AND t8.user_id = #{userId}
+-- 修改 JOIN 条件：对于子评论，获取被回复的用户信息
+                 LEFT JOIN comment t7 ON t1.parent_id = t7.comment_id AND t1.comment_type = '1'
+                 LEFT JOIN user t5 ON t7.user_id = t5.user_id
         ORDER BY t1.root_id, t1.create_time, t1.level
     </select>
 

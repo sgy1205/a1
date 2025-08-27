@@ -123,6 +123,8 @@
         WHERE
             t1.del_flag = '0'
         AND t1.user_id = #{userId}
+        ORDER BY
+            t1.update_time DESC,t1.create_time DESC
     </select>
 
     <select id="getOtherUserPostListVo" resultType="postListVo">
@@ -163,6 +165,8 @@
             t1.del_flag = '0'
             AND t1.user_id = #{otherUserId}
             AND t3.audit_status = 1
+        ORDER BY
+            t1.update_time DESC,t1.create_time DESC
     </select>
 
     <select id="getUserCollection" resultType="postListVo">
@@ -178,6 +182,7 @@
             t1.update_time,
             t1.like_number,
             t1.comment_number,
+            t3.audit_status,
             CASE
                 WHEN t2.likes_id IS NOT NULL THEN 1
                 ELSE 0
@@ -207,6 +212,8 @@
           AND t4.user_id = #{userId}
           AND t4.del_flag = '0'
           AND t3.audit_status = 1
+        ORDER BY
+            t4.create_time DESC
     </select>
 
     <select id="getHomePostList" resultType="postListVo">
@@ -309,6 +316,7 @@
             t1.browse_number,
             t1.user_id,
             t2.nick_name,
+            t2.avatar,
             t3.audit_status,
 
             CASE
@@ -395,4 +403,19 @@
             #{item.postId}
         </foreach>
     </update>
+
+    <select id="getPostCount" resultType="long">
+        select
+            count(t1.post_id)
+        from
+            post t1
+        left join
+                post_audit t2
+        on
+            t1.post_id = t2.post_id
+        where
+            t1.user_id = #{userId}
+        and
+            t2.audit_status = 1
+     </select>
 </mapper>

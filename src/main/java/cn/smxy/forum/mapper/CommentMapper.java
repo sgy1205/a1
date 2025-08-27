@@ -20,6 +20,6 @@ public interface CommentMapper extends BaseMapper<Comment> {
      * 获取评论区评论列表
      * @return
      */
-    List<CommentListVo> selectCommentListVo(@Param("userId") Long userId,@Param("postId") Long postId);
+    List<CommentListVo> selectCommentListVo(@Param("postId") Long postId,@Param("userId") Long userId);
 
 }
