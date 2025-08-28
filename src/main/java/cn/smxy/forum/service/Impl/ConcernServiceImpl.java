@@ -85,7 +85,7 @@ public class ConcernServiceImpl extends ServiceImpl<ConcernMapper, Concern> impl
         notification.setMessage(user.getNickName()+" 关注了你");
         notification.setRelatedId(userId);
         notification.setRelatedType("0");
-        notification.setNotificationId(userId);
+        notification.setOperatorId(userId);
         notification.setAvatar(user.getAvatar());
 
         redisUtil.addToListTail(REDIS_NOTIFICATIONS_KEY,notification);

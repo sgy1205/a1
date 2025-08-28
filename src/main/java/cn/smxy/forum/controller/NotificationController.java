@@ -1,15 +1,21 @@
 package cn.smxy.forum.controller;
 
 import cn.smxy.forum.domain.entity.Notification;
+import cn.smxy.forum.domain.entity.Points;
+import cn.smxy.forum.domain.other.BaseEntity;
+import cn.smxy.forum.domain.other.TableDataInfo;
+import cn.smxy.forum.domain.param.other.PageQuery;
 import cn.smxy.forum.domain.vo.NotificationListVo;
 import cn.smxy.forum.mapping.NotificationMapping;
 import cn.smxy.forum.service.INotificationService;
 import cn.smxy.forum.utils.R;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,14 +32,16 @@ public class NotificationController extends BaseController {
 
     @GetMapping("/list")
     @ApiOperation("获取当前登录用户的消息列表")
-    public R<List<NotificationListVo>> notificationList() {
+    public TableDataInfo<List<NotificationListVo>> notificationList(@Validated PageQuery pageQuery,String type) {
+        Page<Notification> page = new Page<>(pageQuery.getPageNum(), pageQuery.getPageSize());
         LambdaQueryWrapper<Notification> lqw = new LambdaQueryWrapper<>();
         lqw.eq(Notification::getDelFlag,NO_DELETE)
-                .eq(Notification::getUserId,getUserId());
-        List<Notification> notifications = notificationService.list(lqw);
+                .eq(Notification::getUserId,getUserId())
+                .eq(type!=null,Notification::getType,type).orderByDesc(BaseEntity::getCreateTime);
+        Page<Notification> notifications = notificationService.page(page,lqw);
 
-        List<NotificationListVo> listVos= NotificationMapping.INSTANCE.toListVoList(notifications);
-        return R.ok(listVos);
+        List<NotificationListVo> listVos= NotificationMapping.INSTANCE.toListVoList(notifications.getRecords());
+        return getDataTable(listVos, notifications.getTotal());
     }
 
     @PostMapping("/readAll")

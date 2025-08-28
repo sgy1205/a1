@@ -45,7 +45,7 @@ public class RoleController extends BaseController {
 
         List<RolePageListVo> pageListVoList = RoleMapping.INSTANCE.toPageListVoList(roleList.getRecords());
 
-        return getDataTable(pageListVoList);
+        return getDataTable(pageListVoList,roleList.getTotal());
     }
 
     @PostMapping()

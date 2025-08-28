@@ -35,12 +35,12 @@ public class PointsController extends BaseController {
     public TableDataInfo<List<PointListVo>> getPointList(@Validated PageQuery pageQuery) {
         Page<Points> page = new Page<>(pageQuery.getPageNum(), pageQuery.getPageSize());
         LambdaQueryWrapper<Points> lqw = new LambdaQueryWrapper<>();
-        lqw.eq(Points::getUserId,getUserId());
+        lqw.eq(Points::getUserId,getUserId()).orderByDesc(Points::getCreateTime);
         Page<Points> pointsPage = pointsService.page(page, lqw);
 
         List<PointListVo> pointListVos= PointsMapping.INSTANCE.toListVoList(pointsPage.getRecords());
 
-        return getDataTable(pointListVos);
+        return getDataTable(pointListVos, pointsPage.getTotal());
     }
 
     @GetMapping("/getUserPointsRank")
