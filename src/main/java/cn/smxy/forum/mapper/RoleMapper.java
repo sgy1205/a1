@@ -60,4 +60,11 @@ public interface RoleMapper extends BaseMapper<Role> {
      * @return
      */
     Integer addUserCommonRole(@Param("roleId") Long roleId, @Param("userId") Long userId);
+
+    /**
+     * 获取用户绑定的角色标识
+     * @param userId
+     * @return
+     */
+    List<String> getRoleKeysByUserId(@Param("userId") Long userId);
 }

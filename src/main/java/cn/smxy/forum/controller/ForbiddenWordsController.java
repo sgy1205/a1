@@ -16,6 +16,7 @@ import cn.smxy.forum.utils.RedisUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,6 +35,7 @@ public class ForbiddenWordsController extends BaseController {
 
     @ApiOperation("新增违禁词")
     @PostMapping
+    @PreAuthorize("@myExpressionUtil.myAuthority('forbiddenWord:add')")
     public R createForbiddenWord(@RequestBody @Validated AddForbiddenWordDTO addForbiddenWordDTO){
         redisUtil.deleteObject("forbiddenWordList");
         redisUtil.deleteObject("forbiddenWordRegexList");
@@ -42,12 +44,14 @@ public class ForbiddenWordsController extends BaseController {
 
     @ApiOperation("查询违禁词详情")
     @GetMapping("/{forbiddenWordsId}")
+    @PreAuthorize("@myExpressionUtil.myAuthority('forbiddenWord:get')")
     public R<ForbiddenWordsDetailVo> selectDtl(@PathVariable Long forbiddenWordsId){
         return R.ok(ForbiddenWordsMapping.INSTANCE.toDtl(forbiddenWordsService.getById(forbiddenWordsId)));
     }
 
     @ApiOperation("编辑违禁词信息")
     @PutMapping
+    @PreAuthorize("@myExpressionUtil.myAuthority('forbiddenWord:put')")
     public R updateForbiddenWord(@RequestBody @Validated UpdateForbiddenWordsDTO updateForbiddenWordsDTO){
         redisUtil.deleteObject("forbiddenWordList");
         redisUtil.deleteObject("forbiddenWordRegexList");
@@ -56,6 +60,7 @@ public class ForbiddenWordsController extends BaseController {
 
     @ApiOperation(value = "删除违禁词信息",notes = "支持批量删除")
     @DeleteMapping("{forbiddenWordIds}")
+    @PreAuthorize("@myExpressionUtil.myAuthority('forbiddenWord:delete')")
     public R deleteForbiddenWord(@PathVariable List<Long> forbiddenWordIds){
         redisUtil.deleteObject("forbiddenWordList");
         redisUtil.deleteObject("forbiddenWordRegexList");
@@ -64,6 +69,7 @@ public class ForbiddenWordsController extends BaseController {
 
     @ApiOperation("分页查询违禁词列表信息")
     @GetMapping("/list")
+    @PreAuthorize("@myExpressionUtil.myAuthority('forbiddenWord:list')")
     public TableDataInfo<ForbiddenWordsPageListVo> list(@Validated PageQuery pageQuery, @Validated ForbiddenWordsPageListDTO forbiddenWordsPageListDTO) {
         startPage();
         List<ForbiddenWordsPageListVo> forbiddenWords = forbiddenWordsService.selectForbiddenWordList(forbiddenWordsPageListDTO);

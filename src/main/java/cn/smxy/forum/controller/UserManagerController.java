@@ -15,6 +15,7 @@ import cn.smxy.forum.utils.R;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,6 +33,7 @@ public class UserManagerController extends BaseController {
 
     @GetMapping("/getUserPageList")
     @ApiOperation(("获取用户管理分页数据"))
+    @PreAuthorize("@myExpressionUtil.myAuthority('userManager:pagelist')")
     public TableDataInfo<List<UserManagerPageListVo>> getUserPageList(@Validated PageQuery pageQuery, UserPageListDTO userPageListDTO){
         startPage();
         List<UserManagerPageListVo> userManagerPageListVos = userService.getUserPageList(userPageListDTO);
@@ -41,6 +43,7 @@ public class UserManagerController extends BaseController {
 
     @GetMapping("/detail/{userId}")
     @ApiOperation("获取当前用户详情")
+    @PreAuthorize("@myExpressionUtil.myAuthority('userManager:detail')")
     public R<UserManagerDetailVo> getUserDetailById(@PathVariable("userId") Long userId){
         UserManagerDetail userManagerDetail=userService.getUserDetailById(userId);
 
@@ -56,6 +59,7 @@ public class UserManagerController extends BaseController {
 
     @PutMapping("/update")
     @ApiOperation("编辑用户信息")
+    @PreAuthorize("@myExpressionUtil.myAuthority('userManager:put')")
     public R updateUser(@RequestBody @Validated UpdateUserDTO updateUserDTO){
         Long userId=updateUserDTO.getUserId();
 

@@ -33,7 +33,7 @@ public class MenuController extends BaseController{
 
     @GetMapping("/directory")
     @ApiOperation("获取权限菜单目录列表")
-//    @PreAuthorize("@myExpressionUtil.myAuthority('menu:directory')")
+    @PreAuthorize("@myExpressionUtil.myAuthority('menu:directory')")
     public R<List<MenuDirectoryVo>> getMenuPageList(MenuListDTO menuListDTO) {
         LambdaQueryWrapper<Menu> lqw=new LambdaQueryWrapper<>();
         lqw.like(menuListDTO.getMenuName()!=null,Menu::getMenuName, menuListDTO.getMenuName());
@@ -46,6 +46,7 @@ public class MenuController extends BaseController{
 
     @GetMapping("/menuList")
     @ApiOperation("获取树形菜单列表")
+    @PreAuthorize("@myExpressionUtil.myAuthority('menu:menuList')")
     public R<List<TreeSelect>> getSunMenuList(){
         List<TreeSelect> treeSelects = menuService.buildTreeSelect(menuService.list());
         return R.ok(treeSelects);
@@ -53,6 +54,7 @@ public class MenuController extends BaseController{
 
     @PostMapping()
     @ApiOperation("添加权限菜单")
+    @PreAuthorize("@myExpressionUtil.myAuthority('menu:add')")
     public R addMenu(@Validated @RequestBody AddMenuDTO addMenuDTO){
         LambdaQueryWrapper<Menu> lqw=new LambdaQueryWrapper<>();
         lqw.eq(Menu::getMenuName,addMenuDTO.getMenuName());
@@ -67,6 +69,7 @@ public class MenuController extends BaseController{
 
     @GetMapping("/{menuId}")
     @ApiOperation("获取当前菜单详情")
+    @PreAuthorize("@myExpressionUtil.myAuthority('menu:get')")
     public R<Menu> getMenu(@PathVariable("menuId") Long menuId){
         LambdaQueryWrapper<Menu> lqw=new LambdaQueryWrapper<>();
         lqw.eq(Menu::getMenuId,menuId);
@@ -75,6 +78,7 @@ public class MenuController extends BaseController{
 
     @PutMapping()
     @ApiOperation("修改权限菜单")
+    @PreAuthorize("@myExpressionUtil.myAuthority('menu:put')")
     public R updateMenu(@Validated @RequestBody UpdateMenuDTO updateMenuDTO){
         LambdaQueryWrapper<Menu> lqw=new LambdaQueryWrapper<>();
         lqw.eq(Menu::getMenuName,updateMenuDTO.getMenuName());
@@ -90,6 +94,7 @@ public class MenuController extends BaseController{
 
     @DeleteMapping("/{menuId}")
     @ApiOperation("删除权限菜单")
+    @PreAuthorize("@myExpressionUtil.myAuthority('menu:delete')")
     public R deleteMenu(@PathVariable("menuId") Long menuId){
         LambdaQueryWrapper<Menu> lqw=new LambdaQueryWrapper<>();
         lqw.eq(Menu::getParentId,menuId);

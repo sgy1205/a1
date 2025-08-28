@@ -61,4 +61,11 @@ public interface IRoleService extends IService<Role> {
      */
     Integer addUserCommonRole(Long userId);
 
+    /**
+     * 获取用户绑定的角色标识
+     * @param userId
+     * @return
+     */
+    List<String> getRoleKeysByUserId(Long userId);
+
 }

@@ -13,6 +13,7 @@ import cn.smxy.forum.utils.R;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +34,7 @@ public class PostManagerController extends BaseController {
 
     @GetMapping("/pageList")
     @ApiOperation("帖子分页查询")
+    @PreAuthorize("@myExpressionUtil.myAuthority('postManager:list')")
     public TableDataInfo<List<PostManagerPageListVo>> postManagerPagelist(@Validated PageQuery pageQuery, PostManagerPageListDTO postManagerPageListDTO) {
         startPage();
         List<PostManagerPageListVo> postManagerPageListVos = postService.getPostManagerPageListVo(postManagerPageListDTO);
@@ -42,6 +44,7 @@ public class PostManagerController extends BaseController {
     @PostMapping("/recommend/{postId}")
     @ApiOperation("推荐 0-未推荐 1-推荐")
     @Transactional(rollbackFor = Exception.class)
+    @PreAuthorize("@myExpressionUtil.myAuthority('postManager:recommend')")
     public R postManagerRecommend(@PathVariable("postId") Long postId) {
         PostAudit audit = postAuditService.getById(postId);
 
@@ -58,6 +61,7 @@ public class PostManagerController extends BaseController {
 
     @DeleteMapping("/deletePost/{postId}")
     @ApiOperation("修改帖子删除状态")
+    @PreAuthorize("@myExpressionUtil.myAuthority('postManager:delete')")
     public R deletePost(@PathVariable("postId") Long postId) {
         Post post = postService.getById(postId);
         if(post.getDelFlag().equals(NO_DELETE)){
@@ -71,6 +75,7 @@ public class PostManagerController extends BaseController {
 
     @PostMapping("/audit")
     @ApiOperation("帖子审核")
+    @PreAuthorize("@myExpressionUtil.myAuthority('postManager:audit')")
     public R updatePostAuditStatus(@Validated @RequestBody UpdatePostAuditStatusDTO updatePostAuditStatusDTO) {
         return postAuditService.updatePostAuditStatus(updatePostAuditStatusDTO)>0?R.ok():R.fail("修改审核状态失败");
     }

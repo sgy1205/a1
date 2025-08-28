@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -59,6 +60,11 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     @Override
     public Integer addUserCommonRole(Long userId) {
         return roleMapper.addUserCommonRole(2L,userId);
+    }
+
+    @Override
+    public List<String> getRoleKeysByUserId(Long userId) {
+        return roleMapper.getRoleKeysByUserId(userId);
     }
 
 

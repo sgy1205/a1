@@ -27,6 +27,11 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
         return menuMapper.getNumberOfRoleMenu(menuId);
     }
 
+    @Override
+    public List<String> getAllermission() {
+        return menuMapper.getAllermission();
+    }
+
     /**
      * 把平铺的菜单列表转成前端所需的树形 TreeSelect
      */

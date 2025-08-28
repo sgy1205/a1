@@ -27,6 +27,10 @@
             t1.status = 0
     </select>
 
+    <select id="getAllermission" resultType="string">
+        select perms from menu where status = 0
+    </select>
+
     <select id="getNumberOfRoleMenu" resultType="integer">
         SELECT
             COUNT(DISTINCT role_id) AS role_count

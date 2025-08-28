@@ -9,6 +9,7 @@ import cn.smxy.forum.utils.R;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,12 +43,14 @@ public class SilenceController extends BaseController {
 
     @PostMapping("/setSilence")
     @ApiOperation("禁言")
+    @PreAuthorize("@myExpressionUtil.myAuthority('userManager:setSilence')")
     public R setSilence(@RequestBody @Validated AddSilenceDTO addSilenceDTO){
         return silenceService.addSilence(addSilenceDTO)?R.ok():R.fail("禁言失败");
     }
 
     @PostMapping("/updateSilence")
     @ApiOperation("修改禁言状态")
+    @PreAuthorize("@myExpressionUtil.myAuthority('userManager:updateSilence')")
     public R updateSilenceStatus(@RequestBody @Validated UpdateSilenceStatusDTO updateSilenceStatusDTO){
         return silenceService.updateSilenceStatus(updateSilenceStatusDTO)?R.ok():R.fail("修改失败");
     }

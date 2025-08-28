@@ -8,7 +8,18 @@ import java.util.List;
 
 public interface MenuMapper extends BaseMapper<Menu> {
 
+    /**
+     * 获取用户绑定的角色的权限列表
+     * @param userId
+     * @return
+     */
     List<String> queryPermissionByUserId(@Param("userId") Long userId);
+
+    /**
+     * 获取所有权限列表
+     * @return
+     */
+    List<String> getAllermission();
 
     /**
      * 获取菜单绑定的角色数量

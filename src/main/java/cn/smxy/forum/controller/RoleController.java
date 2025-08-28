@@ -16,6 +16,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,6 +35,7 @@ public class RoleController extends BaseController {
 
     @GetMapping("/pageList")
     @ApiOperation("角色列表分页查询")
+    @PreAuthorize("@myExpressionUtil.myAuthority('role:pageList')")
     public TableDataInfo<List<RolePageListVo>> getRolePageList(@Validated PageQuery pageQuery,RolePageListDTO rolePageListDTO){
         Page<Role> page = new Page<>(pageQuery.getPageNum(), pageQuery.getPageSize());
         LambdaQueryWrapper<Role> lqw=new LambdaQueryWrapper<>();
@@ -50,6 +52,7 @@ public class RoleController extends BaseController {
 
     @PostMapping()
     @ApiOperation("添加角色")
+    @PreAuthorize("@myExpressionUtil.myAuthority('role:add')")
     public R addRole(@RequestBody AddRoleDTO addRoleDTO){
         addRoleDTO.setCreateTime(new Date());
         addRoleDTO.setUpdateTime(new Date());
@@ -78,6 +81,7 @@ public class RoleController extends BaseController {
 
     @PutMapping()
     @ApiOperation("修改角色")
+    @PreAuthorize("@myExpressionUtil.myAuthority('role:put')")
     public R updateRole(@RequestBody UpdateRoleDTO updateRoleDTO){
         updateRoleDTO.setUpdateTime(new Date());
         updateRoleDTO.setUpdateBy(getUsername());
@@ -100,12 +104,14 @@ public class RoleController extends BaseController {
 
     @GetMapping("/{roleId}")
     @ApiOperation("获取当前角色信息")
+    @PreAuthorize("@myExpressionUtil.myAuthority('role:get')")
     public R<RoleDetailVo> getRoleById(@PathVariable("roleId") Long roleId){
         return R.ok(roleService.getRoleDetail(roleId));
     }
 
     @PostMapping("/updateStatus/{roleId}")
     @ApiOperation("修改角色状态")
+    @PreAuthorize("@myExpressionUtil.myAuthority('role:updateStatus')")
     public R updateRoleStatus(@PathVariable("roleId") Long roleId){
         Role role = roleService.getById(roleId);
         if(role.getStatus().equals("0")){
@@ -118,6 +124,7 @@ public class RoleController extends BaseController {
 
     @DeleteMapping()
     @ApiOperation("删除角色")
+    @PreAuthorize("@myExpressionUtil.myAuthority('role:delete')")
     public R deleteRole(@RequestBody List<Long> roleIds){
         if(!roleService.removeByIds(roleIds)){
             return R.fail("删除操作出错");

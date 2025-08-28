@@ -42,4 +42,23 @@
     <insert id="addUserCommonRole">
         insert into user_role (user_id,role_id) values (#{userId},#{roleId})
     </insert>
+
+    <select id="getRoleKeysByUserId" resultType="string">
+        select
+            t1.role_key
+        from
+            role t1
+        left join
+            user_role t2
+        on
+            t1.role_id = t2.role_id
+        left join
+            user t3
+        on
+            t2.user_id = t3.user_id
+        where
+            t3.user_id = #{userId}
+        and
+            t1.status = 0
+    </select>
 </mapper>
